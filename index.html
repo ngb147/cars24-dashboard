@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cars24 Huddle Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .upload-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .upload-status {
+            font-size: 13px;
+            color: #a0a0a0;
+            min-width: 150px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #4A90E2;
+            margin-bottom: 5px;
+        }
+
+        .metric-subtext {
+            font-size: 12px;
+            color: #707070;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(74, 144, 226, 0.5);
+        }
+
+        .zone-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .zone-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4A90E2;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .region-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .region-row:last-child {
+            border-bottom: none;
+        }
+
+        .region-cell {
+            font-size: 13px;
+        }
+
+        .region-label {
+            color: #a0a0a0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .region-value {
+            color: #ffffff;
+            font-weight: 500;
+            margin-top: 3px;
+        }
+
+        .zone-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4A90E2;
+        }
+
+        .error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.5);
+            color: #2ecc71;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .dealer-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .upload-section {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .region-row {
+                grid-template-columns: 1fr;
+            }
+
+            .zone-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Cars24 Huddle Dashboard</h1>
+            <div class="upload-section">
+                <div class="file-input-wrapper">
+                    <button class="upload-btn" onclick="document.getElementById('excelFile').click()">
+                        📊 Upload Excel
+                    </button>
+                    <input type="file" id="excelFile" accept=".xlsx,.xls" onchange="handleFileUpload(event)">
+                </div>
+                <div class="upload-status" id="uploadStatus">Ready to upload</div>
+            </div>
+        </div>
+
+        <div id="messageArea"></div>
+
+        <div class="section">
+            <div class="section-title">Dashboard Metrics</div>
+            <div class="metrics-grid" id="metricsGrid">
+                <div class="metric-card">
+                    <div class="metric-label">Total Inspections</div>
+                    <div class="metric-value" id="totalInspections">0</div>
+                    <div class="metric-subtext">Records loaded</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Non GS Inspections</div>
+                    <div class="metric-value" id="nonGsInspections">0</div>
+                    <div class="metric-subtext">Specialized inspections</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Acceptance Rate</div>
+                    <div class="metric-value" id="acceptanceRate">0%</div>
+                    <div class="metric-subtext">OCB + PAI</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">A2C Conversion</div>
+                    <div class="metric-value" id="a2cConversion">0</div>
+                    <div class="metric-subtext">Active conversions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Negotiation Received</div>
+                    <div class="metric-value" id="negoReceived">0</div>
+                    <div class="metric-subtext">10% threshold</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Total Impressions</div>
+                    <div class="metric-value" id="totalImpressions">0</div>
+                    <div class="metric-subtext">Dealer activity</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Zone Performance</div>
+            <div id="zonePerformance"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Dealer Metrics</div>
+            <div class="dealer-metrics-grid" id="dealerMetrics">
+                <div class="metric-card">
+                    <div class="metric-label">Total Views</div>
+                    <div class="metric-value" id="totalViews">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Total Bids</div>
+                    <div class="metric-value" id="totalBids">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Impression Dealers</div>
+                    <div class="metric-value" id="impressionDealers">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Viewing Dealers</div>
+                    <div class="metric-value" id="viewingDealers">0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Bidding Dealers</div>
+                    <div class="metric-value" id="biddingDealers">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dashboardData = {
+            dashboard_data: [],
+            region_mapping: {},
+            dealer_activity: []
+        };
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    dashboardData = {
+                        dashboard_data: [],
+                        region_mapping: {},
+                        dealer_activity: []
+                    };
+
+                    // Load Dashboard Data
+                    if (workbook.SheetNames.includes('Dashboard_Data')) {
+                        const dashSheet = workbook.Sheets['Dashboard_Data'];
+                        const dashRows = XLSX.utils.sheet_to_json(dashSheet);
+                        dashboardData.dashboard_data = dashRows;
+                    }
+
+                    // Load Region Mapping
+                    if (workbook.SheetNames.includes('Region mapping')) {
+                        const regSheet = workbook.Sheets['Region mapping'];
+                        const regRows = XLSX.utils.sheet_to_json(regSheet);
+                        regRows.forEach(row => {
+                            if (row[Object.keys(row)[0]]) {
+                                const regionKey = Object.keys(row)[0];
+                                dashboardData.region_mapping[row[regionKey]] = {
+                                    zone: row[Object.keys(row)[1]],
+                                    leaders: row[Object.keys(row)[2]]
+                                };
+                            }
+                        });
+                    }
+
+                    // Load Dealer Activity
+                    if (workbook.SheetNames.includes('Dealer_Activity')) {
+                        const dealerSheet = workbook.Sheets['Dealer_Activity'];
+                        const dealerRows = XLSX.utils.sheet_to_json(dealerSheet);
+                        dashboardData.dealer_activity = dealerRows;
+                    }
+
+                    updateDashboard();
+                    showMessage('✓ Excel file loaded successfully', 'success');
+                    document.getElementById('uploadStatus').textContent = 'Data updated: ' + new Date().toLocaleTimeString();
+                } catch (error) {
+                    showMessage('✗ Error loading Excel file: ' + error.message, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function updateDashboard() {
+            updateDashboardMetrics();
+            updateZonePerformance();
+            updateDealerMetrics();
+        }
+
+        function updateDashboardMetrics() {
+            const data = dashboardData.dashboard_data;
+            const regionMapping = dashboardData.region_mapping;
+
+            let metrics = {
+                total_inspections: 0,
+                non_gs_inspections: 0,
+                day_unique_raises: 0,
+                ehb_tp: 0,
+                acceptance: 0,
+                acceptance_count: 0,
+                a2c_tokens: 0,
+                a2c: 0,
+                nego_received: 0,
+                nego_tokens: 0,
+                nego_conversion: 0,
+                total_pr: 0,
+                total_si: 0
+            };
+
+            data.forEach(record => {
+                metrics.total_inspections += getNumber(record['Total Inspections']);
+                metrics.non_gs_inspections += getNumber(record['Non GS Inspections']);
+                metrics.day_unique_raises += getNumber(record['Day Unique Raises']);
+                metrics.ehb_tp += getNumber(record['EHB/TP']);
+                metrics.acceptance += getNumber(record['Acceptance (OCB+PAI)']);
+                if (record['Acceptance%']) metrics.acceptance_count += 1;
+                metrics.a2c_tokens += getNumber(record['A2C tokens']);
+                metrics.a2c += getNumber(record['A2C']);
+                metrics.nego_received += getNumber(record['Nego Received 10%']);
+                metrics.nego_tokens += getNumber(record['Nego token Done']);
+                metrics.nego_conversion += getNumber(record['Nego Conversion']);
+                metrics.total_pr += getNumber(record['Total PR']);
+                metrics.total_si += getNumber(record['Total SI']);
+            });
+
+            const acceptanceRate = metrics.total_inspections > 0 
+                ? ((metrics.acceptance / metrics.total_inspections) * 100).toFixed(2)
+                : 0;
+
+            document.getElementById('totalInspections').textContent = metrics.total_inspections.toLocaleString();
+            document.getElementById('nonGsInspections').textContent = metrics.non_gs_inspections.toLocaleString();
+            document.getElementById('acceptanceRate').textContent = acceptanceRate + '%';
+            document.getElementById('a2cConversion').textContent = metrics.a2c.toLocaleString();
+            document.getElementById('negoReceived').textContent = metrics.nego_received.toLocaleString();
+        }
+
+        function updateDealerMetrics() {
+            const data = dashboardData.dealer_activity;
+
+            let metrics = {
+                total_impressions: 0,
+                total_views: 0,
+                total_bids: 0,
+                impression_dealers: 0,
+                viewing_dealers: 0,
+                bidding_dealers: 0
+            };
+
+            data.forEach(record => {
+                metrics.total_impressions += getNumber(record['Impressions']);
+                metrics.total_views += getNumber(record['Views']);
+                metrics.total_bids += getNumber(record['Bids']);
+                metrics.impression_dealers += getNumber(record['Impression Dealers']);
+                metrics.viewing_dealers += getNumber(record['Viewing Dealers']);
+                metrics.bidding_dealers += getNumber(record['Bidding Dealers']);
+            });
+
+            document.getElementById('totalImpressions').textContent = metrics.total_impressions.toLocaleString();
+            document.getElementById('totalViews').textContent = metrics.total_views.toLocaleString();
+            document.getElementById('totalBids').textContent = metrics.total_bids.toLocaleString();
+            document.getElementById('impressionDealers').textContent = metrics.impression_dealers.toLocaleString();
+            document.getElementById('viewingDealers').textContent = metrics.viewing_dealers.toLocaleString();
+            document.getElementById('biddingDealers').textContent = metrics.bidding_dealers.toLocaleString();
+        }
+
+        function updateZonePerformance() {
+            const data = dashboardData.dashboard_data;
+            const regionMapping = dashboardData.region_mapping;
+
+            const zonePerf = {};
+
+            data.forEach(record => {
+                const regionCode = record['Region'];
+                if (!regionCode) return;
+
+                const regionInfo = regionMapping[regionCode] || {};
+                const zone = regionInfo.zone || 'Unknown';
+
+                if (!zonePerf[zone]) {
+                    zonePerf[zone] = {
+                        total_inspections: 0,
+                        acceptance: 0,
+                        regions: {}
+                    };
+                }
+
+                const insp = getNumber(record['Total Inspections']);
+                const accept = getNumber(record['Acceptance (OCB+PAI)']);
+
+                zonePerf[zone].total_inspections += insp;
+                zonePerf[zone].acceptance += accept;
+
+                if (!zonePerf[zone].regions[regionCode]) {
+                    zonePerf[zone].regions[regionCode] = {
+                        total_inspections: 0,
+                        acceptance: 0,
+                        leaders: regionInfo.leaders
+                    };
+                }
+
+                zonePerf[zone].regions[regionCode].total_inspections += insp;
+                zonePerf[zone].regions[regionCode].acceptance += accept;
+            });
+
+            let html = '';
+            Object.keys(zonePerf).sort().forEach(zone => {
+                const perf = zonePerf[zone];
+                const acceptPct = perf.total_inspections > 0
+                    ? ((perf.acceptance / perf.total_inspections) * 100).toFixed(2)
+                    : 0;
+
+                html += `
+                    <div class="zone-container">
+                        <div class="zone-header">
+                            <span>${zone}</span>
+                            <span style="font-size: 14px; font-weight: 400; color: #a0a0a0;">${perf.total_inspections.toLocaleString()} inspections</span>
+                        </div>
+                `;
+
+                Object.keys(perf.regions).sort().forEach(regionCode => {
+                    const regPerf = perf.regions[regionCode];
+                    const regAcceptPct = regPerf.total_inspections > 0
+                        ? ((regPerf.acceptance / regPerf.total_inspections) * 100).toFixed(2)
+                        : 0;
+
+                    html += `
+                        <div class="region-row">
+                            <div class="region-cell">
+                                <div class="region-label">Region</div>
+                                <div class="region-value">${regionCode}</div>
+                            </div>
+                            <div class="region-cell">
+                                <div class="region-label">Inspections</div>
+                                <div class="region-value">${regPerf.total_inspections.toLocaleString()}</div>
+                            </div>
+                            <div class="region-cell">
+                                <div class="region-label">Acceptance</div>
+                                <div class="region-value">${regAcceptPct}%</div>
+                            </div>
+                            <div class="region-cell">
+                                <div class="region-label">Leaders</div>
+                                <div class="region-value">${regPerf.leaders || 'N/A'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        <div class="zone-summary">
+                            <div class="summary-item">
+                                <div class="summary-label">Total Inspections</div>
+                                <div class="summary-value">${perf.total_inspections.toLocaleString()}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Total Acceptance</div>
+                                <div class="summary-value">${perf.acceptance.toLocaleString()}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">Acceptance %</div>
+                                <div class="summary-value">${acceptPct}%</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('zonePerformance').innerHTML = html || '<p style="color: #a0a0a0;">No data available</p>';
+        }
+
+        function getNumber(value) {
+            if (value === null || value === undefined || value === '') return 0;
+            const num = parseFloat(value);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function showMessage(text, type) {
+            const messageArea = document.getElementById('messageArea');
+            const className = type === 'error' ? 'error' : 'success';
+            messageArea.innerHTML = `<div class="${className}">${text}</div>`;
+            setTimeout(() => {
+                messageArea.innerHTML = '';
+            }, 5000);
+        }
+
+        // Initialize with empty state
+        updateDashboard();
+    </script>
+</body>
+</html>
