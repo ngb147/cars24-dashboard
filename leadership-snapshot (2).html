@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadership Snapshot · Cars24 Inventory Ops</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+/*═══════════════════════════════════════════════════════════
+  CARS24 LEADERSHIP SNAPSHOT — EDITORIAL DESIGN SYSTEM
+  Aesthetic: Bloomberg Terminal × Financial Times × Linear
+  Typography: Fraunces (display) · Inter (body) · JetBrains Mono (data)
+═══════════════════════════════════════════════════════════*/
+
+/*── RESET ──*/
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  /* ── Paper palette ── warm neutral, FT-inspired */
+  --bg:         #F4F1E8;   /* warm parchment base */
+  --bg-alt:     #EDE9DC;   /* slightly deeper warm tone */
+  --surface:    #FAFAF7;   /* near-white paper */
+  --surface2:   #F0EDE4;   /* subtle inner background */
+  --surface3:   #E8E4D8;   /* pressed / active state */
+
+  /* ── Ink scale ── */
+  --ink:        #1A1915;   /* near-black, warm undertone */
+  --ink2:       #4A473E;   /* body text */
+  --ink3:       #7A776C;   /* secondary / captions */
+  --ink4:       #A8A49A;   /* placeholder / disabled */
+  --ink5:       #C8C4BA;   /* hairlines / faint labels */
+
+  /* ── Border scale ── */
+  --rule:       #D8D4C8;   /* primary 1px rules */
+  --rule2:      #C4C0B4;   /* stronger dividers */
+  --rule3:      #E8E4DA;   /* subtle separators */
+
+  /* ── Brand accent — muted orange / amber ── */
+  --accent:     #C4500A;   /* muted burnt orange, not neon */
+  --accent-bg:  #F7EDE3;
+  --accent-rule:#E8C4A8;
+
+  /* ── Signal colors — all muted / desaturated ── */
+  --sig-green:      #2D6A4A;
+  --sig-green-bg:   #EAF2ED;
+  --sig-green-rule: #B8D8C8;
+
+  --sig-red:        #9B2B2B;
+  --sig-red-bg:     #F5EAEA;
+  --sig-red-rule:   #DCBCBC;
+
+  --sig-amber:      #8B5E00;
+  --sig-amber-bg:   #F5EDD8;
+  --sig-amber-rule: #DCC898;
+
+  --sig-blue:       #1A4A7A;
+  --sig-blue-bg:    #E8F0F8;
+  --sig-blue-rule:  #B8CCDF;
+
+  /* ── Geometry — minimal radius, no heavy rounding ── */
+  --r:    4px;
+  --r-sm: 2px;
+  --r-lg: 6px;
+
+  /* ── Elevation — almost flat; only hairline shadows ── */
+  --shadow:    0 1px 2px rgba(26,25,21,.04);
+  --shadow-md: 0 2px 8px rgba(26,25,21,.06);
+}
+
+/*── BASE ──*/
+html{
+  font-size:13px;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  color:var(--ink);
+  background:var(--bg);
+}
+body{
+  font-family:'Inter',sans-serif;
+  font-weight:400;
+  line-height:1.5;
+  min-height:100vh;
+}
+
+/* Editorial em — the "italic bold" hero word */
+em{
+  font-style:italic;
+  font-weight:700;
+  font-family:'Fraunces',serif;
+}
+
+/* Mono utility class — for all data labels & metadata */
+.mono{font-family:'JetBrains Mono',monospace;}
+
+/*══════════════════════════════════════════════
+  TOPBAR — Newspaper masthead feel
+══════════════════════════════════════════════*/
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:var(--surface);
+  border-bottom:1px solid var(--rule2);
+  display:flex;align-items:center;gap:16px;
+  padding:0 28px;height:48px;
+}
+
+.topbar-logo{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:700;
+  color:var(--ink);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;
+}
+.topbar-logo .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  flex-shrink:0;
+}
+
+.topbar-sep{width:1px;height:18px;background:var(--rule);}
+
+.topbar-section{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:600;
+  color:var(--ink4);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+
+.topbar-right{
+  margin-left:auto;
+  display:flex;align-items:center;gap:8px;
+}
+
+.back-link{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;
+  color:var(--ink3);
+  text-decoration:none;
+  display:flex;align-items:center;gap:4px;
+  padding:4px 10px;
+  border:1px solid var(--rule);
+  border-radius:var(--r-sm);
+  background:transparent;
+  transition:border-color .15s,color .15s;
+  letter-spacing:.04em;
+}
+.back-link:hover{border-color:var(--rule2);color:var(--ink);}
+
+/* View toggle — monochrome, thin */
+.view-toggle{
+  display:flex;
+  border:1px solid var(--rule);
+  border-radius:var(--r-sm);
+  overflow:hidden;
+}
+.view-btn{
+  padding:4px 12px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  background:transparent;
+  border:none;cursor:pointer;
+  transition:background .12s,color .12s;
+}
+.view-btn + .view-btn{border-left:1px solid var(--rule);}
+.view-btn.active{background:var(--ink);color:var(--surface);}
+.view-btn:hover:not(.active){background:var(--surface2);}
+
+/* Date chips — flat, typographic */
+.date-chip{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  background:var(--ink);color:var(--surface);
+  padding:4px 10px;
+  border-radius:var(--r-sm);
+}
+.lmtd-chip{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  background:transparent;color:var(--ink3);
+  padding:4px 10px;
+  border:1px solid var(--rule);
+  border-radius:var(--r-sm);
+}
+
+/*══════════════════════════════════════════════
+  PAGE & HERO — Editorial newspaper layout
+══════════════════════════════════════════════*/
+.page{max-width:1240px;margin:0 auto;padding:32px 28px 100px;}
+
+.page-hero{
+  padding:36px 0 28px;
+  border-bottom:1px solid var(--rule);
+  margin-bottom:36px;
+}
+.hero-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.15em;
+  color:var(--ink4);margin-bottom:12px;
+}
+.hero-title{
+  font-family:'Fraunces',serif;
+  font-size:52px;font-weight:300;
+  line-height:1.0;letter-spacing:-.02em;
+  color:var(--ink);
+  font-optical-sizing:auto;
+}
+.hero-title em{
+  font-style:italic;font-weight:700;
+  color:var(--accent);
+}
+.hero-meta{
+  display:flex;align-items:center;gap:0;
+  margin-top:16px;flex-wrap:wrap;
+}
+.hero-meta-item{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;color:var(--ink4);
+  display:flex;align-items:center;gap:6px;
+  padding-right:14px;margin-right:14px;
+  border-right:1px solid var(--rule);
+}
+.hero-meta-item:last-child{border-right:none;}
+.hero-meta-item b{color:var(--ink2);font-weight:600;}
+
+/*══════════════════════════════════════════════
+  SECTIONS — Editorial chapter markers
+══════════════════════════════════════════════*/
+.section{margin-bottom:44px;}
+
+.section-header{
+  display:flex;align-items:baseline;gap:14px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--rule);
+  margin-bottom:18px;
+}
+.section-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:500;
+  color:var(--ink5);letter-spacing:.1em;
+  text-transform:uppercase;flex-shrink:0;
+  padding-top:6px; /* baseline align with Fraunces */
+}
+.section-label{
+  font-family:'Fraunces',serif;
+  font-size:22px;font-weight:300;
+  color:var(--ink);letter-spacing:-.02em;
+  line-height:1;
+  font-optical-sizing:auto;
+}
+.section-label em{font-style:italic;font-weight:700;color:var(--ink);}
+.section-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:500;
+  color:var(--ink4);
+  margin-left:auto;letter-spacing:.04em;
+  text-transform:uppercase;
+  padding-top:6px;
+  flex-shrink:0;
+}
+.section-divider{height:1px;background:var(--rule);margin-bottom:18px;}
+
+/*══════════════════════════════════════════════
+  CARDS — Editorial panels, near-flat
+══════════════════════════════════════════════*/
+.card{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:var(--r);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-pad{padding:20px;}
+
+/*══════════════════════════════════════════════
+  HAWK-EYE ALERTS — Operational intelligence
+══════════════════════════════════════════════*/
+.hawk-row{display:flex;flex-direction:column;gap:1px;border:1px solid var(--rule);border-radius:var(--r);overflow:hidden;}
+
+.hawk-item{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:14px 18px;
+  background:var(--surface);
+  border-left:2px solid transparent;
+  border-bottom:1px solid var(--rule3);
+  transition:background .1s;
+}
+.hawk-item:last-child{border-bottom:none;}
+.hawk-item:hover{background:var(--surface2);}
+
+.hawk-item.sev-critical{
+  border-left-color:var(--sig-red);
+  background:var(--sig-red-bg);
+}
+.hawk-item.sev-warning{
+  border-left-color:var(--sig-amber);
+  background:var(--sig-amber-bg);
+}
+.hawk-item.sev-good{
+  border-left-color:var(--sig-green);
+  background:var(--sig-green-bg);
+}
+
+.hawk-icon{
+  font-size:14px;flex-shrink:0;
+  margin-top:2px;line-height:1;
+  /* downplay emoji, keep it functional */
+  filter:saturate(.7);
+}
+.hawk-body{flex:1;min-width:0;}
+
+.hawk-title{
+  font-family:'Inter',sans-serif;
+  font-size:11.5px;font-weight:600;
+  letter-spacing:.01em;
+  margin-bottom:3px;line-height:1.3;
+}
+.hawk-item.sev-critical .hawk-title{color:var(--sig-red);}
+.hawk-item.sev-warning  .hawk-title{color:var(--sig-amber);}
+.hawk-item.sev-good     .hawk-title{color:var(--sig-green);}
+
+.hawk-desc{
+  font-size:11px;color:var(--ink3);
+  line-height:1.55;
+}
+.hawk-regions{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;color:var(--ink4);
+  margin-top:5px;letter-spacing:.02em;
+}
+
+.hawk-action{
+  flex-shrink:0;align-self:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;
+  border:1px solid;
+  border-radius:var(--r-sm);
+  cursor:default;white-space:nowrap;
+  background:var(--surface);
+}
+.hawk-item.sev-critical .hawk-action{color:var(--sig-red);  border-color:var(--sig-red-rule);}
+.hawk-item.sev-warning  .hawk-action{color:var(--sig-amber);border-color:var(--sig-amber-rule);}
+.hawk-item.sev-good     .hawk-action{color:var(--sig-green);border-color:var(--sig-green-rule);}
+
+/*══════════════════════════════════════════════
+  ZONE PULSE — Flat data tiles, not circles
+══════════════════════════════════════════════*/
+.zone-stories{
+  display:flex;gap:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.zone-stories::-webkit-scrollbar{display:none;}
+
+.zone-pill-wrap{
+  display:flex;flex-direction:column;
+  align-items:flex-start;
+  gap:0;flex-shrink:0;cursor:pointer;
+  padding:14px 18px;
+  border-right:1px solid var(--rule);
+  transition:background .12s;
+  min-width:110px;
+}
+.zone-pill-wrap:last-child{border-right:none;}
+.zone-pill-wrap:hover{background:var(--surface2);}
+.zone-pill-wrap.zone-active{background:var(--surface2);border-bottom:2px solid var(--ink);}
+
+/* Replace circles with flat monogram badges */
+.zone-ring{
+  width:auto;height:auto;
+  border-radius:var(--r-sm);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;
+  border:1px solid;
+  padding:2px 7px;
+  margin-bottom:8px;
+  transition:all .15s;
+}
+.ring-green{background:var(--sig-green-bg);color:var(--sig-green);border-color:var(--sig-green-rule);}
+.ring-amber{background:var(--sig-amber-bg);color:var(--sig-amber);border-color:var(--sig-amber-rule);}
+.ring-red{background:var(--sig-red-bg);  color:var(--sig-red);  border-color:var(--sig-red-rule);}
+.ring-active{
+  background:var(--ink)!important;
+  color:var(--surface)!important;
+  border-color:var(--ink)!important;
+}
+
+.zone-pill-name{
+  font-family:'Inter',sans-serif;
+  font-size:12px;font-weight:600;
+  color:var(--ink);line-height:1.2;
+}
+.zone-pill-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--ink4);
+  letter-spacing:.02em;
+  margin-top:2px;
+}
+.zone-pill-delta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:600;
+  padding:0;border-radius:0;
+  line-height:1.4;
+  margin-top:5px;
+  letter-spacing:.02em;
+}
+.zdelta-up{color:var(--sig-green);}
+.zdelta-down{color:var(--sig-red);}
+.zdelta-flat{color:var(--ink4);}
+
+/*══════════════════════════════════════════════
+  KPI GRID — Financial terminal metrics
+══════════════════════════════════════════════*/
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  border:1px solid var(--rule);
+  border-radius:var(--r);
+  overflow:hidden;
+}
+@media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+
+.kpi{
+  background:var(--surface);
+  border-right:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  padding:20px 18px;
+  display:flex;flex-direction:column;gap:0;
+  box-shadow:none;
+  transition:background .12s;
+  /* kill SaaS card aesthetic */
+}
+/* Remove double borders on grid edges */
+.kpi:nth-child(4n){border-right:none;}
+.kpi:nth-last-child(-n+4){border-bottom:none;}
+@media(max-width:700px){
+  .kpi:nth-child(4n){border-right:1px solid var(--rule);}
+  .kpi:nth-child(2n){border-right:none;}
+  .kpi:nth-last-child(-n+4){border-bottom:1px solid var(--rule);}
+  .kpi:nth-last-child(-n+2){border-bottom:none;}
+}
+.kpi:hover{background:var(--surface2);}
+
+.kpi-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:var(--ink4);margin-bottom:10px;
+}
+
+/* Large Fraunces numerals — editorial finance feel */
+.kpi-val{
+  font-family:'Fraunces',serif;
+  font-size:36px;font-weight:400;
+  line-height:1;letter-spacing:-.03em;
+  color:var(--ink);
+  margin-bottom:8px;
+  font-optical-sizing:auto;
+}
+
+.kpi-delta{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:600;
+  padding:2px 7px;
+  border-radius:var(--r-sm);
+  width:fit-content;
+  border:1px solid;
+  margin-bottom:6px;
+}
+.kpi-delta.up{
+  background:var(--sig-green-bg);color:var(--sig-green);
+  border-color:var(--sig-green-rule);
+}
+.kpi-delta.down{
+  background:var(--sig-red-bg);color:var(--sig-red);
+  border-color:var(--sig-red-rule);
+}
+.kpi-delta.flat{
+  background:transparent;color:var(--ink4);
+  border-color:var(--rule);
+}
+
+.kpi-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--ink4);
+  letter-spacing:.02em;line-height:1.5;
+}
+
+/* Thin accent underline instead of pill bar */
+.kpi-bar{
+  height:1px;
+  background:var(--rule);
+  margin-top:10px;
+  overflow:hidden;
+}
+.kpi-bar-fill{
+  height:100%;
+  transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+
+/*══════════════════════════════════════════════
+  FUNNEL — Clean step-by-step data flow
+══════════════════════════════════════════════*/
+.funnel-wrap{display:flex;flex-direction:column;gap:0;}
+
+.funnel-step{
+  padding:16px 20px;
+  border-bottom:1px solid var(--rule3);
+  transition:background .1s;
+}
+.funnel-step:hover{background:var(--surface2);}
+.funnel-step:last-child{border-bottom:none;}
+
+.funnel-step-head{
+  display:flex;justify-content:space-between;
+  align-items:baseline;margin-bottom:10px;
+}
+.funnel-step-left{}
+
+.funnel-step-name{
+  font-size:11.5px;font-weight:500;
+  color:var(--ink2);letter-spacing:.01em;
+}
+.funnel-step-owner{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;color:var(--ink4);
+  margin-top:2px;letter-spacing:.04em;text-transform:uppercase;
+}
+
+.funnel-step-right{display:flex;align-items:baseline;gap:12px;}
+
+.funnel-val{
+  font-family:'Fraunces',serif;
+  font-size:26px;font-weight:400;
+  letter-spacing:-.02em;
+  font-optical-sizing:auto;
+}
+.funnel-vs{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;color:var(--ink4);
+}
+.funnel-delta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:600;
+  padding:2px 7px;
+  border-radius:var(--r-sm);
+  border:1px solid;
+}
+.funnel-delta.up{background:var(--sig-green-bg);color:var(--sig-green);border-color:var(--sig-green-rule);}
+.funnel-delta.dn{background:var(--sig-red-bg);  color:var(--sig-red);  border-color:var(--sig-red-rule);}
+.funnel-delta.flat{background:transparent;color:var(--ink4);border-color:var(--rule);}
+
+.funnel-bars{display:flex;flex-direction:column;gap:3px;}
+.funnel-bar-row{display:flex;align-items:center;gap:10px;}
+.funnel-bar-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;color:var(--ink4);
+  width:26px;text-align:right;flex-shrink:0;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.funnel-bar-track{
+  flex:1;height:4px;
+  background:var(--surface3);
+  border-radius:0;  /* flat, editorial */
+  overflow:hidden;
+}
+.funnel-bar-fill2{
+  height:100%;
+  border-radius:0;
+  transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+.funnel-conv{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;color:var(--ink4);
+  display:flex;align-items:center;gap:4px;margin-top:4px;
+}
+.funnel-conv-chip{
+  padding:1px 5px;
+  border-radius:var(--r-sm);
+  font-size:8.5px;font-weight:600;
+  border:1px solid;
+}
+
+/*══════════════════════════════════════════════
+  COMPARE TABLE — Financial data grid
+══════════════════════════════════════════════*/
+.cmp-table{width:100%;border-collapse:collapse;}
+
+.cmp-table th{
+  padding:10px 14px;
+  text-align:left;
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:600;
+  color:var(--ink4);
+  text-transform:uppercase;letter-spacing:.08em;
+  background:var(--surface2);
+  border-bottom:1px solid var(--rule2);
+  white-space:nowrap;
+  position:sticky;top:48px;z-index:10;
+}
+.cmp-table td{
+  padding:11px 14px;
+  border-bottom:1px solid var(--rule3);
+  font-size:12px;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+.cmp-table tbody tr:last-child td{border-bottom:none;}
+.cmp-table tbody tr:hover td{background:var(--surface2);}
+
+.mtd-val{
+  font-family:'Fraunces',serif;
+  font-weight:400;font-size:14px;
+  color:var(--ink);
+  font-optical-sizing:auto;
+}
+.lmtd-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;color:var(--ink4);
+}
+.arrow-up{color:var(--sig-green);font-weight:700;}
+.arrow-dn{color:var(--sig-red);font-weight:700;}
+.arrow-flat{color:var(--ink5);}
+
+/* Zone tags — muted, flat */
+.region-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:2px 6px;
+  border-radius:var(--r-sm);
+  border:1px solid;
+  display:inline-block;
+}
+.tag-North{background:#EBF0F8;color:#2A4A7A;border-color:#C0D0E4;}
+.tag-West{ background:#F0EBF8;color:#4A2A7A;border-color:#C8B8E8;}
+.tag-East{ background:#EBF5EE;color:#2A5A3A;border-color:#B8D4C0;}
+.tag-South{background:#F8F0EB;color:#7A3A1A;border-color:#E4C8B0;}
+.tag-BLR{  background:#F8EBF0;color:#7A1A3A;border-color:#E4B0C4;}
+.tag-MH{   background:#F8F5EB;color:#6A4A00;border-color:#E0CCA0;}
+
+/* Pace chips — muted, bordered */
+.pace-chip{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;
+  padding:3px 8px;
+  border-radius:var(--r-sm);
+  border:1px solid;
+}
+.pace-on{    background:var(--sig-green-bg);color:var(--sig-green);border-color:var(--sig-green-rule);}
+.pace-watch{ background:var(--sig-amber-bg);color:var(--sig-amber);border-color:var(--sig-amber-rule);}
+.pace-behind{background:var(--sig-red-bg);  color:var(--sig-red);  border-color:var(--sig-red-rule);}
+
+/*══════════════════════════════════════════════
+  ZONE SCORECARD — Command center tiles
+══════════════════════════════════════════════*/
+.zone-scorecard{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  border:1px solid var(--rule);
+  border-radius:var(--r);
+  overflow:hidden;
+}
+@media(max-width:700px){.zone-scorecard{grid-template-columns:repeat(2,1fr);}}
+
+.zone-card{
+  background:var(--surface);
+  border-right:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  padding:18px 20px;
+  box-shadow:none;
+  transition:background .12s;
+}
+.zone-card:nth-child(3n){border-right:none;}
+.zone-card:nth-last-child(-n+3){border-bottom:none;}
+@media(max-width:700px){
+  .zone-card:nth-child(3n){border-right:1px solid var(--rule);}
+  .zone-card:nth-child(2n){border-right:none;}
+  .zone-card:nth-last-child(-n+3){border-bottom:1px solid var(--rule);}
+  .zone-card:nth-last-child(-n+2){border-bottom:none;}
+}
+.zone-card:hover{background:var(--surface2);}
+
+.zone-card-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:14px;
+}
+.zone-card-name{
+  font-family:'Fraunces',serif;
+  font-size:18px;font-weight:400;
+  letter-spacing:-.01em;color:var(--ink);
+  font-optical-sizing:auto;
+}
+.zone-card-leader{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;color:var(--ink4);
+  margin-top:3px;letter-spacing:.03em;
+}
+
+.zone-card-metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule3);}
+.zone-metric{
+  background:var(--surface2);
+  padding:10px 12px;
+}
+.zone-metric-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;color:var(--ink4);
+  font-weight:600;text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:4px;
+}
+.zone-metric-val{
+  font-family:'Fraunces',serif;
+  font-size:18px;font-weight:400;
+  color:var(--ink);line-height:1;
+  font-optical-sizing:auto;
+}
+.zone-metric-delta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:600;margin-top:3px;
+}
+.zdm-up{color:var(--sig-green);}
+.zdm-dn{color:var(--sig-red);}
+.zdm-flat{color:var(--ink4);}
+
+.zone-card-footer{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid var(--rule3);
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.zone-card-pr{
+  font-family:'Fraunces',serif;
+  font-size:28px;font-weight:400;
+  color:var(--accent);letter-spacing:-.02em;
+  font-optical-sizing:auto;
+}
+.zone-card-pr-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;color:var(--ink4);
+  font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+}
+
+/*══════════════════════════════════════════════
+  CHARTS — Clean, muted, analytical
+══════════════════════════════════════════════*/
+.chart-wrap{position:relative;height:190px;}
+
+/* Chart card labels */
+.card-pad .fs-11.fw-900{
+  font-family:'Inter',sans-serif;
+  font-size:11.5px;font-weight:600;
+  color:var(--ink);
+}
+.card-pad .fs-10.text-ink3{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--ink4);
+  letter-spacing:.03em;text-transform:uppercase;
+}
+
+/*══════════════════════════════════════════════
+  GRID HELPERS
+══════════════════════════════════════════════*/
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:750px){.two-col,.three-col{grid-template-columns:1fr;}}
+
+/*══════════════════════════════════════════════
+  STATUS CHIPS — Muted, bordered, monospaced
+══════════════════════════════════════════════*/
+.chip{
+  display:inline-flex;align-items:center;
+  padding:2px 8px;
+  border-radius:var(--r-sm);
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;
+  border:1px solid;
+}
+.chip-green{background:var(--sig-green-bg);color:var(--sig-green);border-color:var(--sig-green-rule);}
+.chip-red{  background:var(--sig-red-bg);  color:var(--sig-red);  border-color:var(--sig-red-rule);}
+.chip-amber{background:var(--sig-amber-bg);color:var(--sig-amber);border-color:var(--sig-amber-rule);}
+.chip-blue{ background:var(--sig-blue-bg); color:var(--sig-blue); border-color:var(--sig-blue-rule);}
+.chip-gray{ background:var(--surface2);    color:var(--ink4);     border-color:var(--rule);}
+.chip-orange{background:var(--accent-bg);  color:var(--accent);   border-color:var(--accent-rule);}
+
+/*══════════════════════════════════════════════
+  SPLASH SCREEN — Masthead minimal
+══════════════════════════════════════════════*/
+#splash{
+  position:fixed;inset:0;
+  background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;
+}
+.splash-wordmark{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink);
+}
+.splash-wordmark span{color:var(--accent);}
+.splash-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--ink4);
+  letter-spacing:.1em;text-transform:uppercase;
+}
+.splash-bar{
+  width:120px;height:1px;
+  background:var(--rule);overflow:hidden;
+}
+.splash-prog{
+  height:100%;
+  background:var(--ink);
+  animation:splashLoad 1.3s ease forwards;
+}
+@keyframes splashLoad{from{width:0}to{width:100%}}
+
+/*══════════════════════════════════════════════
+  MISC UTILITIES
+══════════════════════════════════════════════*/
+.divider{height:1px;background:var(--rule);margin:6px 0;}
+.text-orange{color:var(--accent);}
+.text-green{ color:var(--sig-green);}
+.text-red{   color:var(--sig-red);}
+.text-amber{ color:var(--sig-amber);}
+.text-ink2{  color:var(--ink2);}
+.text-ink3{  color:var(--ink3);}
+.fw-900{font-weight:700;}
+.fs-11{font-size:11px;}
+.fs-10{font-size:10px;}
+.mt-4{margin-top:4px;}.mt-8{margin-top:8px;}.mt-12{margin-top:12px;}
+.table-scroll{overflow-x:auto;}
+
+/*══════════════════════════════════════════════
+  CSV UPLOAD DROPDOWN — Operational utility
+══════════════════════════════════════════════*/
+.upload-wrap{position:relative;}
+
+.upload-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:4px 11px;
+  border:1px dashed var(--rule2);
+  border-radius:var(--r-sm);
+  background:transparent;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink3);
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.upload-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+  background:var(--accent-bg);
+}
+.upload-btn .upload-icon{font-size:11px;line-height:1;}
+.upload-btn.has-data{
+  border-style:solid;
+  border-color:var(--sig-green);
+  color:var(--sig-green);
+  background:var(--sig-green-bg);
+}
+
+.upload-dropdown{
+  position:absolute;top:calc(100% + 8px);right:0;
+  width:320px;
+  background:var(--surface);
+  border:1px solid var(--rule2);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-md);
+  padding:18px;z-index:500;
+  display:none;flex-direction:column;gap:14px;
+}
+.upload-dropdown.open{display:flex;}
+
+.upload-dropdown-title{
+  font-family:'Inter',sans-serif;
+  font-size:12px;font-weight:600;color:var(--ink);
+}
+.upload-dropdown-sub{
+  font-size:11px;color:var(--ink3);
+  line-height:1.5;margin-top:3px;
+}
+
+.upload-drop-zone{
+  border:1px dashed var(--rule2);
+  border-radius:var(--r);
+  padding:22px;text-align:center;cursor:pointer;
+  transition:all .15s;background:var(--surface2);
+}
+.upload-drop-zone:hover,.upload-drop-zone.drag-over{
+  border-color:var(--accent);background:var(--accent-bg);
+}
+.upload-drop-zone-icon{font-size:20px;margin-bottom:6px;filter:saturate(.5);}
+.upload-drop-zone-label{
+  font-size:11px;font-weight:500;color:var(--ink2);
+}
+.upload-drop-zone-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--ink4);margin-top:3px;
+  letter-spacing:.02em;
+}
+#csv-file-input{display:none;}
+
+.upload-format{
+  background:var(--surface2);
+  border:1px solid var(--rule3);
+  border-radius:var(--r-sm);
+  padding:10px 12px;
+}
+.upload-format-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:600;color:var(--ink4);
+  text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:7px;
+}
+.upload-format-cols{display:flex;flex-wrap:wrap;gap:4px;}
+.upload-format-col{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-radius:var(--r-sm);
+  padding:2px 6px;color:var(--ink3);
+}
+
+.upload-status{
+  padding:9px 11px;
+  border-radius:var(--r-sm);
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;font-weight:500;
+  letter-spacing:.02em;
+  display:none;align-items:center;gap:6px;border:1px solid;
+}
+.upload-status.success{background:var(--sig-green-bg);color:var(--sig-green);border-color:var(--sig-green-rule);display:flex;}
+.upload-status.error{  background:var(--sig-red-bg);  color:var(--sig-red);  border-color:var(--sig-red-rule);  display:flex;}
+.upload-status.loading{background:var(--sig-amber-bg);color:var(--sig-amber);border-color:var(--sig-amber-rule);display:flex;}
+
+.upload-clear-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:500;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink4);background:none;border:none;
+  cursor:pointer;text-decoration:underline;
+  text-align:center;padding:0;
+}
+.upload-clear-btn:hover{color:var(--sig-red);}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-wordmark">CARS24 <span>·</span> SUPPLY</div>
+  <div class="splash-sub">Loading leadership snapshot…</div>
+  <div class="splash-bar"><div class="splash-prog"></div></div>
+</div>
+
+<div id="app" style="display:none">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-logo"><div class="dot"></div>CARS24 · INVENTORY OPS</div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-section">Leadership Snapshot</div>
+    <div class="topbar-right">
+      <span class="date-chip" id="d1-chip">—</span>
+      <span class="lmtd-chip" id="d2-chip">—</span>
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="setView('standard',this)">Standard</button>
+        <button class="view-btn" onclick="setView('focus',this)">Focus</button>
+      </div>
+
+      <!-- CSV UPLOAD DROPDOWN -->
+      <div class="upload-wrap" id="upload-wrap">
+        <button class="upload-btn" id="upload-btn" onclick="toggleUpload(event)">
+          <span class="upload-icon">⬆</span>
+          <span id="upload-btn-label">Update Data</span>
+        </button>
+        <div class="upload-dropdown" id="upload-dropdown">
+          <div>
+            <div class="upload-dropdown-title">Upload new CSV data</div>
+            <div class="upload-dropdown-sub">Drop your daily export to instantly refresh the whole dashboard — no page reload needed.</div>
+          </div>
+          <div class="upload-drop-zone" id="upload-drop-zone"
+               onclick="$('csv-file-input').click()"
+               ondragover="handleDragOver(event)"
+               ondragleave="handleDragLeave(event)"
+               ondrop="handleDrop(event)">
+            <div class="upload-drop-zone-icon">📂</div>
+            <div class="upload-drop-zone-label">Click to browse or drag &amp; drop</div>
+            <div class="upload-drop-zone-sub">CSV file · same format as Dashboard_Data_-_Main.csv</div>
+          </div>
+          <input type="file" id="csv-file-input" accept=".csv" onchange="handleFileSelect(event)">
+          <div class="upload-format">
+            <div class="upload-format-title">Expected columns</div>
+            <div class="upload-format-cols">
+              <span class="upload-format-col">Date</span><span class="upload-format-col">Region</span>
+              <span class="upload-format-col">Total Inspections</span><span class="upload-format-col">Non GS Inspections</span>
+              <span class="upload-format-col">Day Unique Raises</span><span class="upload-format-col">EHB/TP</span>
+              <span class="upload-format-col">Acceptance (OCB+PAI)</span><span class="upload-format-col">Acceptance%</span>
+              <span class="upload-format-col">A2C tokens</span><span class="upload-format-col">A2C</span>
+              <span class="upload-format-col">Nego Received 10%</span><span class="upload-format-col">Nego token Done</span>
+              <span class="upload-format-col">Nego Conversion</span><span class="upload-format-col">Total PR</span>
+              <span class="upload-format-col">Total SI</span>
+            </div>
+          </div>
+          <div class="upload-status" id="upload-status"></div>
+          <button class="upload-clear-btn" id="upload-clear-btn" style="display:none" onclick="clearUpload()">↩ Restore embedded data</button>
+        </div>
+      </div>
+
+      <a href="#" class="back-link">← Daily Huddle</a>
+    </div>
+  </header>
+
+  <!-- PAGE -->
+  <div class="page">
+
+    <!-- HERO -->
+    <div class="page-hero">
+      <div class="hero-label">D-1 Review · Leadership Read</div>
+      <div class="hero-title">The <em id="hero-month">—</em> Read</div>
+      <div class="hero-meta" id="hero-meta"></div>
+    </div>
+
+    <!-- §1 HAWK-EYE ALERTS -->
+    <div class="section" id="section-alerts">
+      <div class="section-header">
+        <span class="section-num">§ 01</span>
+        <span class="section-label">Hawk-eye <em>Alerts</em></span>
+        <span class="section-sub" id="alert-count-label"></span>
+      </div>
+      <div class="hawk-row" id="hawk-row"></div>
+    </div>
+
+    <!-- §2 ZONE STORIES -->
+    <div class="section" id="section-zones">
+      <div class="section-header">
+        <span class="section-num">§ 02</span>
+        <span class="section-label">Zone <em>Pulse</em></span>
+        <span class="section-sub">MTD vs LMTD · click to filter</span>
+      </div>
+      <div class="card card-pad">
+        <div class="zone-stories" id="zone-stories"></div>
+      </div>
+    </div>
+
+    <!-- §3 HEADLINE KPIs -->
+    <div class="section" id="section-kpis">
+      <div class="section-header">
+        <span class="section-num">§ 03</span>
+        <span class="section-label">Today's <em>headline</em></span>
+        <span class="section-sub">D-1 vs D-2</span>
+      </div>
+      <div class="kpi-grid" id="kpi-grid"></div>
+    </div>
+
+    <!-- §4 ZONE SCORECARD MTD vs LMTD -->
+    <div class="section" id="section-scorecard">
+      <div class="section-header">
+        <span class="section-num">§ 04</span>
+        <span class="section-label">Zone <em>scorecard</em></span>
+        <span class="section-sub">MTD vs LMTD</span>
+      </div>
+      <div class="zone-scorecard" id="zone-scorecard"></div>
+    </div>
+
+    <!-- §5 FUNNEL MECHANICS -->
+    <div class="section" id="section-funnel">
+      <div class="section-header">
+        <span class="section-num">§ 05</span>
+        <span class="section-label">Funnel <em>mechanics</em></span>
+        <span class="section-sub">D-1 vs D-2 · national view</span>
+      </div>
+      <div class="card">
+        <div class="funnel-wrap" id="funnel-wrap"></div>
+      </div>
+    </div>
+
+    <!-- §6 TREND -->
+    <div class="section" id="section-trend">
+      <div class="section-header">
+        <span class="section-num">§ 06</span>
+        <span class="section-label">30-day <em>trend</em></span>
+        <span class="section-sub">National daily totals</span>
+      </div>
+      <div class="two-col">
+        <div class="card card-pad">
+          <div class="fs-11 fw-900" style="margin-bottom:4px">Inspections & PRs</div>
+          <div class="fs-10 text-ink3" style="margin-bottom:12px">Daily volume — last 30 working days</div>
+          <div class="chart-wrap"><canvas id="chart-vol"></canvas></div>
+        </div>
+        <div class="card card-pad">
+          <div class="fs-11 fw-900" style="margin-bottom:4px">Acceptance % · A2C %</div>
+          <div class="fs-10 text-ink3" style="margin-bottom:12px">Conversion health over time</div>
+          <div class="chart-wrap"><canvas id="chart-pct"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §7 MTD/LMTD REGION MATRIX -->
+    <div class="section" id="section-matrix">
+      <div class="section-header">
+        <span class="section-num">§ 07</span>
+        <span class="section-label">Full <em>matrix</em></span>
+        <span class="section-sub">MTD vs LMTD · all regions · all metrics</span>
+      </div>
+      <div class="card">
+        <div class="table-scroll">
+          <table class="cmp-table" id="matrix-table">
+            <thead>
+              <tr>
+                <th>Region</th>
+                <th>Zone</th>
+                <th>Inspections</th>
+                <th>Non-GS Insp</th>
+                <th>Raises</th>
+                <th>Accept%</th>
+                <th>Accepted</th>
+                <th>A2C%</th>
+                <th>A2C Tokens</th>
+                <th>PRs</th>
+                <th>SIs</th>
+                <th>PR→SI%</th>
+                <th>Pace</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- §8 D-1 REGION SPOTLIGHT -->
+    <div class="section" id="section-spotlight">
+      <div class="section-header">
+        <span class="section-num">§ 08</span>
+        <span class="section-label">Region <em>spotlight</em></span>
+        <span class="section-sub">D-1 vs D-2 · all regions ranked by PRs</span>
+      </div>
+      <div class="card">
+        <div class="table-scroll">
+          <table class="cmp-table" id="spotlight-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Region</th><th>Zone</th>
+                <th>Inspections</th><th>Accept%</th><th>Accepted</th>
+                <th>A2C%</th><th>Tokens</th><th>PRs</th><th>SIs</th>
+                <th>EHB/TP</th><th>Status</th><th>RCA</th>
+              </tr>
+            </thead>
+            <tbody id="spotlight-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+</div><!-- /app -->
+
+<script>
+// ── DATA INJECTED BELOW ──────────────────────────────
+</script>
+<script id="data-block">
+const DATA = {"d1_date": "2026-05-20", "d2_date": "2026-05-19", "mtd_start": "2026-05-01", "lmtd_start": "2026-04-01", "lmtd_end": "2026-04-20", "mtd_days": 20, "lmtd_days": 20, "d1": [{"Date": "2026-05-20", "Region": "AMD", "Total Inspections": 35, "Non GS Inspections": 18, "Day Unique Raises": 133, "EHB/TP": null, "Acceptance (OCB+PAI)": 20, "Acceptance%": 0.15039999999999998, "A2C tokens": 3, "A2C": 0.15, "Nego Received 10%": 15, "Nego token Done": 10, "Nego Conversion": 0.6667000000000001, "Total PR": 12, "Total SI": 4, "Zone": "West"}, {"Date": "2026-05-20", "Region": "BLR", "Total Inspections": 75, "Non GS Inspections": 34, "Day Unique Raises": 294, "EHB/TP": null, "Acceptance (OCB+PAI)": 47, "Acceptance%": 0.15990000000000001, "A2C tokens": 13, "A2C": 0.2766, "Nego Received 10%": 22, "Nego token Done": 7, "Nego Conversion": 0.3182, "Total PR": 10, "Total SI": 9, "Zone": "BLR"}, {"Date": "2026-05-20", "Region": "CHN", "Total Inspections": 39, "Non GS Inspections": 12, "Day Unique Raises": 70, "EHB/TP": null, "Acceptance (OCB+PAI)": 4, "Acceptance%": 0.0571, "A2C tokens": 1, "A2C": 0.25, "Nego Received 10%": 7, "Nego token Done": 6, "Nego Conversion": 0.8571, "Total PR": 8, "Total SI": 0, "Zone": "South"}, {"Date": "2026-05-20", "Region": "EAS", "Total Inspections": 0, "Non GS Inspections": 0, "Day Unique Raises": 66, "EHB/TP": null, "Acceptance (OCB+PAI)": 0, "Acceptance%": 0.0, "A2C tokens": 0, "A2C": null, "Nego Received 10%": 0, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 0, "Total SI": 0, "Zone": "East"}, {"Date": "2026-05-20", "Region": "EBR", "Total Inspections": 12, "Non GS Inspections": 7, "Day Unique Raises": 25, "EHB/TP": null, "Acceptance (OCB+PAI)": 7, "Acceptance%": 0.28, "A2C tokens": 4, "A2C": 0.5714, "Nego Received 10%": 1, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 3, "Total SI": 2, "Zone": "East"}, {"Date": "2026-05-20", "Region": "EJH", "Total Inspections": 6, "Non GS Inspections": 6, "Day Unique Raises": 26, "EHB/TP": null, "Acceptance (OCB+PAI)": 0, "Acceptance%": 0.0, "A2C tokens": 0, "A2C": null, "Nego Received 10%": 2, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 1, "Total SI": 0, "Zone": "East"}, {"Date": "2026-05-20", "Region": "EOR", "Total Inspections": 6, "Non GS Inspections": 6, "Day Unique Raises": 27, "EHB/TP": null, "Acceptance (OCB+PAI)": 1, "Acceptance%": 0.037000000000000005, "A2C tokens": 0, "A2C": 0.0, "Nego Received 10%": 2, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 1, "Total SI": 0, "Zone": "East"}, {"Date": "2026-05-20", "Region": "EWB", "Total Inspections": 17, "Non GS Inspections": 14, "Day Unique Raises": 118, "EHB/TP": null, "Acceptance (OCB+PAI)": 9, "Acceptance%": 0.07629999999999999, "A2C tokens": 4, "A2C": 0.44439999999999996, "Nego Received 10%": 6, "Nego token Done": 3, "Nego Conversion": 0.5, "Total PR": 5, "Total SI": 4, "Zone": "East"}, {"Date": "2026-05-20", "Region": "GJN", "Total Inspections": 33, "Non GS Inspections": 11, "Day Unique Raises": 129, "EHB/TP": null, "Acceptance (OCB+PAI)": 7, "Acceptance%": 0.054299999999999994, "A2C tokens": 1, "A2C": 0.1429, "Nego Received 10%": 3, "Nego token Done": 2, "Nego Conversion": 0.6667000000000001, "Total PR": 3, "Total SI": 2, "Zone": "West"}, {"Date": "2026-05-20", "Region": "GJS", "Total Inspections": 14, "Non GS Inspections": 11, "Day Unique Raises": 104, "EHB/TP": null, "Acceptance (OCB+PAI)": 12, "Acceptance%": 0.11539999999999999, "A2C tokens": 0, "A2C": 0.0, "Nego Received 10%": 6, "Nego token Done": 3, "Nego Conversion": 0.5, "Total PR": 3, "Total SI": 1, "Zone": "West"}, {"Date": "2026-05-20", "Region": "MUM", "Total Inspections": 52, "Non GS Inspections": 25, "Day Unique Raises": 226, "EHB/TP": null, "Acceptance (OCB+PAI)": 52, "Acceptance%": 0.23010000000000003, "A2C tokens": 7, "A2C": 0.1346, "Nego Received 10%": 27, "Nego token Done": 7, "Nego Conversion": 0.2593, "Total PR": 9, "Total SI": 4, "Zone": "MH & AP"}, {"Date": "2026-05-20", "Region": "NDL", "Total Inspections": 190, "Non GS Inspections": 92, "Day Unique Raises": 1761, "EHB/TP": null, "Acceptance (OCB+PAI)": 119, "Acceptance%": 0.0676, "A2C tokens": 60, "A2C": 0.5042, "Nego Received 10%": 124, "Nego token Done": 17, "Nego Conversion": 0.1371, "Total PR": 65, "Total SI": 31, "Zone": "North"}, {"Date": "2026-05-20", "Region": "NHR", "Total Inspections": 25, "Non GS Inspections": 16, "Day Unique Raises": 176, "EHB/TP": null, "Acceptance (OCB+PAI)": 6, "Acceptance%": 0.0341, "A2C tokens": 3, "A2C": 0.5, "Nego Received 10%": 3, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 2, "Total SI": 0, "Zone": "North"}, {"Date": "2026-05-20", "Region": "NPB", "Total Inspections": 19, "Non GS Inspections": 7, "Day Unique Raises": 186, "EHB/TP": null, "Acceptance (OCB+PAI)": 5, "Acceptance%": 0.0269, "A2C tokens": 2, "A2C": 0.4, "Nego Received 10%": 10, "Nego token Done": 1, "Nego Conversion": 0.1, "Total PR": 2, "Total SI": 0, "Zone": "North"}, {"Date": "2026-05-20", "Region": "NRJ", "Total Inspections": 27, "Non GS Inspections": 16, "Day Unique Raises": 180, "EHB/TP": null, "Acceptance (OCB+PAI)": 4, "Acceptance%": 0.0222, "A2C tokens": 1, "A2C": 0.25, "Nego Received 10%": 7, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 0, "Total SI": 0, "Zone": "North"}, {"Date": "2026-05-20", "Region": "NUK", "Total Inspections": 6, "Non GS Inspections": 5, "Day Unique Raises": 51, "EHB/TP": null, "Acceptance (OCB+PAI)": 1, "Acceptance%": 0.0196, "A2C tokens": 0, "A2C": 0.0, "Nego Received 10%": 1, "Nego token Done": 1, "Nego Conversion": 1.0, "Total PR": 0, "Total SI": 0, "Zone": "North"}, {"Date": "2026-05-20", "Region": "PUN", "Total Inspections": 38, "Non GS Inspections": 15, "Day Unique Raises": 229, "EHB/TP": null, "Acceptance (OCB+PAI)": 26, "Acceptance%": 0.11349999999999999, "A2C tokens": 8, "A2C": 0.3077, "Nego Received 10%": 17, "Nego token Done": 6, "Nego Conversion": 0.3529, "Total PR": 10, "Total SI": 3, "Zone": "MH & AP"}, {"Date": "2026-05-20", "Region": "SAP", "Total Inspections": 6, "Non GS Inspections": 5, "Day Unique Raises": 32, "EHB/TP": null, "Acceptance (OCB+PAI)": 2, "Acceptance%": 0.0625, "A2C tokens": 0, "A2C": 0.0, "Nego Received 10%": 0, "Nego token Done": 1, "Nego Conversion": 0.0, "Total PR": 1, "Total SI": 0, "Zone": "MH & AP"}, {"Date": "2026-05-20", "Region": "SKA", "Total Inspections": 10, "Non GS Inspections": 5, "Day Unique Raises": 55, "EHB/TP": null, "Acceptance (OCB+PAI)": 6, "Acceptance%": 0.1091, "A2C tokens": 1, "A2C": 0.16670000000000001, "Nego Received 10%": 2, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 1, "Total SI": 0, "Zone": "BLR"}, {"Date": "2026-05-20", "Region": "SKL", "Total Inspections": 20, "Non GS Inspections": 9, "Day Unique Raises": 58, "EHB/TP": null, "Acceptance (OCB+PAI)": 10, "Acceptance%": 0.1724, "A2C tokens": 1, "A2C": 0.1, "Nego Received 10%": 7, "Nego token Done": 1, "Nego Conversion": 0.1429, "Total PR": 2, "Total SI": 1, "Zone": "South"}, {"Date": "2026-05-20", "Region": "STN", "Total Inspections": 8, "Non GS Inspections": 4, "Day Unique Raises": 39, "EHB/TP": null, "Acceptance (OCB+PAI)": 4, "Acceptance%": 0.1026, "A2C tokens": 2, "A2C": 0.5, "Nego Received 10%": 1, "Nego token Done": 1, "Nego Conversion": 1.0, "Total PR": 4, "Total SI": 0, "Zone": "South"}, {"Date": "2026-05-20", "Region": "STS", "Total Inspections": 46, "Non GS Inspections": 21, "Day Unique Raises": 366, "EHB/TP": null, "Acceptance (OCB+PAI)": 31, "Acceptance%": 0.08470000000000001, "A2C tokens": 7, "A2C": 0.22579999999999997, "Nego Received 10%": 34, "Nego token Done": 6, "Nego Conversion": 0.1765, "Total PR": 7, "Total SI": 6, "Zone": "MH & AP"}, {"Date": "2026-05-20", "Region": "UPE", "Total Inspections": 31, "Non GS Inspections": 16, "Day Unique Raises": 246, "EHB/TP": null, "Acceptance (OCB+PAI)": 23, "Acceptance%": 0.0935, "A2C tokens": 5, "A2C": 0.21739999999999998, "Nego Received 10%": 13, "Nego token Done": 2, "Nego Conversion": 0.15380000000000002, "Total PR": 5, "Total SI": 3, "Zone": "North"}, {"Date": "2026-05-20", "Region": "UPW", "Total Inspections": 33, "Non GS Inspections": 25, "Day Unique Raises": 195, "EHB/TP": null, "Acceptance (OCB+PAI)": 2, "Acceptance%": 0.0103, "A2C tokens": 1, "A2C": 0.5, "Nego Received 10%": 1, "Nego token Done": 1, "Nego Conversion": 1.0, "Total PR": 0, "Total SI": 0, "Zone": "North"}, {"Date": "2026-05-20", "Region": "WMH", "Total Inspections": 30, "Non GS Inspections": 26, "Day Unique Raises": 149, "EHB/TP": null, "Acceptance (OCB+PAI)": 7, "Acceptance%": 0.047, "A2C tokens": 2, "A2C": 0.2857, "Nego Received 10%": 11, "Nego token Done": 5, "Nego Conversion": 0.4545, "Total PR": 8, "Total SI": 2, "Zone": "MH & AP"}, {"Date": "2026-05-20", "Region": "WMP", "Total Inspections": 7, "Non GS Inspections": 6, "Day Unique Raises": 113, "EHB/TP": null, "Acceptance (OCB+PAI)": 2, "Acceptance%": 0.0177, "A2C tokens": 0, "A2C": 0.0, "Nego Received 10%": 4, "Nego token Done": 1, "Nego Conversion": 0.25, "Total PR": 1, "Total SI": 0, "Zone": "West"}], "d2": [{"Date": "2026-05-19", "Region": "AMD", "Total Inspections": 144, "Non GS Inspections": 67, "Day Unique Raises": 210, "EHB/TP": null, "Acceptance (OCB+PAI)": 26, "Acceptance%": 0.12380000000000001, "A2C tokens": 7, "A2C": 0.2692, "Nego Received 10%": 23, "Nego token Done": 13, "Nego Conversion": 0.5652, "Total PR": 18, "Total SI": 14, "Zone": "West"}, {"Date": "2026-05-19", "Region": "BLR", "Total Inspections": 250, "Non GS Inspections": 107, "Day Unique Raises": 348, "EHB/TP": null, "Acceptance (OCB+PAI)": 80, "Acceptance%": 0.2299, "A2C tokens": 33, "A2C": 0.4125, "Nego Received 10%": 54, "Nego token Done": 11, "Nego Conversion": 0.20370000000000002, "Total PR": 39, "Total SI": 25, "Zone": "BLR"}, {"Date": "2026-05-19", "Region": "CHN", "Total Inspections": 113, "Non GS Inspections": 48, "Day Unique Raises": 101, "EHB/TP": null, "Acceptance (OCB+PAI)": 9, "Acceptance%": 0.0891, "A2C tokens": 8, "A2C": 0.8889, "Nego Received 10%": 11, "Nego token Done": 2, "Nego Conversion": 0.1818, "Total PR": 14, "Total SI": 9, "Zone": "South"}, {"Date": "2026-05-19", "Region": "EAS", "Total Inspections": 14, "Non GS Inspections": 14, "Day Unique Raises": 30, "EHB/TP": null, "Acceptance (OCB+PAI)": 2, "Acceptance%": 0.0667, "A2C tokens": 2, "A2C": 1.0, "Nego Received 10%": 2, "Nego token Done": 1, "Nego Conversion": 0.5, "Total PR": 2, "Total SI": 4, "Zone": "East"}, {"Date": "2026-05-19", "Region": "EBR", "Total Inspections": 49, "Non GS Inspections": 23, "Day Unique Raises": 36, "EHB/TP": null, "Acceptance (OCB+PAI)": 4, "Acceptance%": 0.11109999999999999, "A2C tokens": 4, "A2C": 1.0, "Nego Received 10%": 2, "Nego token Done": 2, "Nego Conversion": 1.0, "Total PR": 8, "Total SI": 9, "Zone": "East"}, {"Date": "2026-05-19", "Region": "EJH", "Total Inspections": 27, "Non GS Inspections": 24, "Day Unique Raises": 58, "EHB/TP": null, "Acceptance (OCB+PAI)": 3, "Acceptance%": 0.051699999999999996, "A2C tokens": 2, "A2C": 0.6667000000000001, "Nego Received 10%": 3, "Nego token Done": 1, "Nego Conversion": 0.3333, "Total PR": 4, "Total SI": 2, "Zone": "East"}, {"Date": "2026-05-19", "Region": "EOR", "Total Inspections": 16, "Non GS Inspections": 16, "Day Unique Raises": 46, "EHB/TP": null, "Acceptance (OCB+PAI)": 6, "Acceptance%": 0.1304, "A2C tokens": 4, "A2C": 0.6667000000000001, "Nego Received 10%": 7, "Nego token Done": 2, "Nego Conversion": 0.2857, "Total PR": 6, "Total SI": 4, "Zone": "East"}, {"Date": "2026-05-19", "Region": "EWB", "Total Inspections": 83, "Non GS Inspections": 52, "Day Unique Raises": 148, "EHB/TP": null, "Acceptance (OCB+PAI)": 14, "Acceptance%": 0.0946, "A2C tokens": 8, "A2C": 0.5714, "Nego Received 10%": 15, "Nego token Done": 9, "Nego Conversion": 0.6, "Total PR": 15, "Total SI": 15, "Zone": "East"}, {"Date": "2026-05-19", "Region": "GJN", "Total Inspections": 97, "Non GS Inspections": 58, "Day Unique Raises": 135, "EHB/TP": null, "Acceptance (OCB+PAI)": 12, "Acceptance%": 0.0889, "A2C tokens": 4, "A2C": 0.3333, "Nego Received 10%": 8, "Nego token Done": 3, "Nego Conversion": 0.375, "Total PR": 7, "Total SI": 4, "Zone": "West"}, {"Date": "2026-05-19", "Region": "GJS", "Total Inspections": 93, "Non GS Inspections": 36, "Day Unique Raises": 159, "EHB/TP": null, "Acceptance (OCB+PAI)": 28, "Acceptance%": 0.1761, "A2C tokens": 6, "A2C": 0.2143, "Nego Received 10%": 17, "Nego token Done": 10, "Nego Conversion": 0.5882000000000001, "Total PR": 14, "Total SI": 12, "Zone": "West"}, {"Date": "2026-05-19", "Region": "MUM", "Total Inspections": 216, "Non GS Inspections": 93, "Day Unique Raises": 384, "EHB/TP": null, "Acceptance (OCB+PAI)": 67, "Acceptance%": 0.1745, "A2C tokens": 19, "A2C": 0.2836, "Nego Received 10%": 50, "Nego token Done": 23, "Nego Conversion": 0.46, "Total PR": 38, "Total SI": 24, "Zone": "MH & AP"}, {"Date": "2026-05-19", "Region": "NDL", "Total Inspections": 811, "Non GS Inspections": 472, "Day Unique Raises": 2173, "EHB/TP": null, "Acceptance (OCB+PAI)": 171, "Acceptance%": 0.0787, "A2C tokens": 98, "A2C": 0.5731, "Nego Received 10%": 213, "Nego token Done": 24, "Nego Conversion": 0.1127, "Total PR": 103, "Total SI": 81, "Zone": "North"}, {"Date": "2026-05-19", "Region": "NHR", "Total Inspections": 107, "Non GS Inspections": 75, "Day Unique Raises": 234, "EHB/TP": null, "Acceptance (OCB+PAI)": 7, "Acceptance%": 0.029900000000000003, "A2C tokens": 5, "A2C": 0.7143, "Nego Received 10%": 9, "Nego token Done": 4, "Nego Conversion": 0.44439999999999996, "Total PR": 9, "Total SI": 5, "Zone": "North"}, {"Date": "2026-05-19", "Region": "NPB", "Total Inspections": 97, "Non GS Inspections": 65, "Day Unique Raises": 216, "EHB/TP": null, "Acceptance (OCB+PAI)": 9, "Acceptance%": 0.0417, "A2C tokens": 6, "A2C": 0.6667000000000001, "Nego Received 10%": 15, "Nego token Done": 3, "Nego Conversion": 0.2, "Total PR": 9, "Total SI": 10, "Zone": "North"}, {"Date": "2026-05-19", "Region": "NRJ", "Total Inspections": 149, "Non GS Inspections": 95, "Day Unique Raises": 254, "EHB/TP": null, "Acceptance (OCB+PAI)": 19, "Acceptance%": 0.0748, "A2C tokens": 15, "A2C": 0.7895, "Nego Received 10%": 11, "Nego token Done": 2, "Nego Conversion": 0.1818, "Total PR": 17, "Total SI": 9, "Zone": "North"}, {"Date": "2026-05-19", "Region": "NUK", "Total Inspections": 30, "Non GS Inspections": 29, "Day Unique Raises": 65, "EHB/TP": null, "Acceptance (OCB+PAI)": 4, "Acceptance%": 0.061500000000000006, "A2C tokens": 3, "A2C": 0.75, "Nego Received 10%": 7, "Nego token Done": 3, "Nego Conversion": 0.4286, "Total PR": 6, "Total SI": 3, "Zone": "North"}, {"Date": "2026-05-19", "Region": "PUN", "Total Inspections": 129, "Non GS Inspections": 53, "Day Unique Raises": 340, "EHB/TP": null, "Acceptance (OCB+PAI)": 47, "Acceptance%": 0.1382, "A2C tokens": 16, "A2C": 0.3404, "Nego Received 10%": 32, "Nego token Done": 10, "Nego Conversion": 0.3125, "Total PR": 21, "Total SI": 18, "Zone": "MH & AP"}, {"Date": "2026-05-19", "Region": "SAP", "Total Inspections": 19, "Non GS Inspections": 17, "Day Unique Raises": 48, "EHB/TP": null, "Acceptance (OCB+PAI)": 7, "Acceptance%": 0.1458, "A2C tokens": 2, "A2C": 0.2857, "Nego Received 10%": 2, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 1, "Total SI": 0, "Zone": "MH & AP"}, {"Date": "2026-05-19", "Region": "SKA", "Total Inspections": 44, "Non GS Inspections": 24, "Day Unique Raises": 60, "EHB/TP": null, "Acceptance (OCB+PAI)": 9, "Acceptance%": 0.15, "A2C tokens": 2, "A2C": 0.22219999999999998, "Nego Received 10%": 8, "Nego token Done": 2, "Nego Conversion": 0.25, "Total PR": 4, "Total SI": 3, "Zone": "BLR"}, {"Date": "2026-05-19", "Region": "SKL", "Total Inspections": 76, "Non GS Inspections": 26, "Day Unique Raises": 90, "EHB/TP": null, "Acceptance (OCB+PAI)": 20, "Acceptance%": 0.22219999999999998, "A2C tokens": 6, "A2C": 0.3, "Nego Received 10%": 10, "Nego token Done": 5, "Nego Conversion": 0.5, "Total PR": 11, "Total SI": 8, "Zone": "South"}, {"Date": "2026-05-19", "Region": "STN", "Total Inspections": 41, "Non GS Inspections": 23, "Day Unique Raises": 59, "EHB/TP": null, "Acceptance (OCB+PAI)": 5, "Acceptance%": 0.08470000000000001, "A2C tokens": 4, "A2C": 0.8, "Nego Received 10%": 5, "Nego token Done": 2, "Nego Conversion": 0.4, "Total PR": 4, "Total SI": 2, "Zone": "South"}, {"Date": "2026-05-19", "Region": "STS", "Total Inspections": 230, "Non GS Inspections": 127, "Day Unique Raises": 447, "EHB/TP": null, "Acceptance (OCB+PAI)": 51, "Acceptance%": 0.11410000000000001, "A2C tokens": 11, "A2C": 0.2157, "Nego Received 10%": 50, "Nego token Done": 7, "Nego Conversion": 0.14, "Total PR": 18, "Total SI": 17, "Zone": "MH & AP"}, {"Date": "2026-05-19", "Region": "UPE", "Total Inspections": 147, "Non GS Inspections": 83, "Day Unique Raises": 298, "EHB/TP": null, "Acceptance (OCB+PAI)": 27, "Acceptance%": 0.0906, "A2C tokens": 10, "A2C": 0.3704, "Nego Received 10%": 15, "Nego token Done": 0, "Nego Conversion": 0.0, "Total PR": 10, "Total SI": 12, "Zone": "North"}, {"Date": "2026-05-19", "Region": "UPW", "Total Inspections": 97, "Non GS Inspections": 70, "Day Unique Raises": 230, "EHB/TP": null, "Acceptance (OCB+PAI)": 5, "Acceptance%": 0.0217, "A2C tokens": 3, "A2C": 0.6, "Nego Received 10%": 12, "Nego token Done": 2, "Nego Conversion": 0.16670000000000001, "Total PR": 6, "Total SI": 6, "Zone": "North"}, {"Date": "2026-05-19", "Region": "WMH", "Total Inspections": 135, "Non GS Inspections": 95, "Day Unique Raises": 171, "EHB/TP": null, "Acceptance (OCB+PAI)": 12, "Acceptance%": 0.0702, "A2C tokens": 8, "A2C": 0.6667000000000001, "Nego Received 10%": 17, "Nego token Done": 4, "Nego Conversion": 0.2353, "Total PR": 13, "Total SI": 9, "Zone": "MH & AP"}, {"Date": "2026-05-19", "Region": "WMP", "Total Inspections": 142, "Non GS Inspections": 99, "Day Unique Raises": 162, "EHB/TP": null, "Acceptance (OCB+PAI)": 5, "Acceptance%": 0.030899999999999997, "A2C tokens": 3, "A2C": 0.6, "Nego Received 10%": 10, "Nego token Done": 3, "Nego Conversion": 0.3, "Total PR": 14, "Total SI": 14, "Zone": "West"}], "mtd": [{"Region": "AMD", "Total Inspections": 3055, "Non GS Inspections": 1573, "Day Unique Raises": 3931, "Acceptance (OCB+PAI)": 538, "A2C tokens": 163, "Nego Received 10%": 434, "Nego token Done": 251, "Total PR": 361, "Total SI": 283, "Acceptance%": 0.1369, "A2C": 0.303, "EHB/TP": null, "Zone": "West", "days": 20}, {"Region": "BLR", "Total Inspections": 4916, "Non GS Inspections": 2270, "Day Unique Raises": 7773, "Acceptance (OCB+PAI)": 1468, "A2C tokens": 703, "Nego Received 10%": 1003, "Nego token Done": 176, "Total PR": 648, "Total SI": 469, "Acceptance%": 0.1889, "A2C": 0.4789, "EHB/TP": null, "Zone": "BLR", "days": 20}, {"Region": "CHN", "Total Inspections": 2186, "Non GS Inspections": 858, "Day Unique Raises": 1902, "Acceptance (OCB+PAI)": 141, "A2C tokens": 117, "Nego Received 10%": 222, "Nego token Done": 59, "Total PR": 216, "Total SI": 178, "Acceptance%": 0.0741, "A2C": 0.8298, "EHB/TP": null, "Zone": "South", "days": 20}, {"Region": "EAS", "Total Inspections": 245, "Non GS Inspections": 245, "Day Unique Raises": 761, "Acceptance (OCB+PAI)": 7, "A2C tokens": 6, "Nego Received 10%": 21, "Nego token Done": 14, "Total PR": 42, "Total SI": 32, "Acceptance%": 0.0092, "A2C": 0.8571, "EHB/TP": null, "Zone": "East", "days": 20}, {"Region": "EBR", "Total Inspections": 908, "Non GS Inspections": 524, "Day Unique Raises": 790, "Acceptance (OCB+PAI)": 84, "A2C tokens": 76, "Nego Received 10%": 113, "Nego token Done": 65, "Total PR": 135, "Total SI": 91, "Acceptance%": 0.1063, "A2C": 0.9048, "EHB/TP": null, "Zone": "East", "days": 20}, {"Region": "EJH", "Total Inspections": 558, "Non GS Inspections": 549, "Day Unique Raises": 853, "Acceptance (OCB+PAI)": 69, "A2C tokens": 58, "Nego Received 10%": 67, "Nego token Done": 27, "Total PR": 86, "Total SI": 57, "Acceptance%": 0.0809, "A2C": 0.8406, "EHB/TP": null, "Zone": "East", "days": 20}, {"Region": "EOR", "Total Inspections": 371, "Non GS Inspections": 364, "Day Unique Raises": 726, "Acceptance (OCB+PAI)": 79, "A2C tokens": 58, "Nego Received 10%": 82, "Nego token Done": 26, "Total PR": 79, "Total SI": 58, "Acceptance%": 0.1088, "A2C": 0.7342, "EHB/TP": null, "Zone": "East", "days": 20}, {"Region": "EWB", "Total Inspections": 1725, "Non GS Inspections": 1172, "Day Unique Raises": 3181, "Acceptance (OCB+PAI)": 289, "A2C tokens": 158, "Nego Received 10%": 304, "Nego token Done": 140, "Total PR": 275, "Total SI": 205, "Acceptance%": 0.0909, "A2C": 0.5467, "EHB/TP": null, "Zone": "East", "days": 20}, {"Region": "GJN", "Total Inspections": 1782, "Non GS Inspections": 1013, "Day Unique Raises": 2528, "Acceptance (OCB+PAI)": 200, "A2C tokens": 56, "Nego Received 10%": 144, "Nego token Done": 96, "Total PR": 159, "Total SI": 121, "Acceptance%": 0.0791, "A2C": 0.28, "EHB/TP": null, "Zone": "West", "days": 20}, {"Region": "GJS", "Total Inspections": 1858, "Non GS Inspections": 903, "Day Unique Raises": 2989, "Acceptance (OCB+PAI)": 411, "A2C tokens": 84, "Nego Received 10%": 304, "Nego token Done": 184, "Total PR": 225, "Total SI": 178, "Acceptance%": 0.1375, "A2C": 0.2044, "EHB/TP": null, "Zone": "West", "days": 20}, {"Region": "MUM", "Total Inspections": 4193, "Non GS Inspections": 2051, "Day Unique Raises": 6468, "Acceptance (OCB+PAI)": 1203, "A2C tokens": 446, "Nego Received 10%": 999, "Nego token Done": 366, "Total PR": 640, "Total SI": 419, "Acceptance%": 0.186, "A2C": 0.3707, "EHB/TP": null, "Zone": "MH & AP", "days": 20}, {"Region": "NDL", "Total Inspections": 16722, "Non GS Inspections": 9620, "Day Unique Raises": 41552, "Acceptance (OCB+PAI)": 3397, "A2C tokens": 1862, "Nego Received 10%": 4312, "Nego token Done": 421, "Total PR": 2113, "Total SI": 1623, "Acceptance%": 0.0818, "A2C": 0.5481, "EHB/TP": null, "Zone": "North", "days": 20}, {"Region": "NHR", "Total Inspections": 1980, "Non GS Inspections": 1340, "Day Unique Raises": 4438, "Acceptance (OCB+PAI)": 174, "A2C tokens": 133, "Nego Received 10%": 160, "Nego token Done": 36, "Total PR": 171, "Total SI": 124, "Acceptance%": 0.0392, "A2C": 0.7644, "EHB/TP": null, "Zone": "North", "days": 20}, {"Region": "NPB", "Total Inspections": 2115, "Non GS Inspections": 1499, "Day Unique Raises": 4103, "Acceptance (OCB+PAI)": 247, "A2C tokens": 156, "Nego Received 10%": 262, "Nego token Done": 29, "Total PR": 175, "Total SI": 122, "Acceptance%": 0.0602, "A2C": 0.6316, "EHB/TP": null, "Zone": "North", "days": 20}, {"Region": "NRJ", "Total Inspections": 2512, "Non GS Inspections": 1578, "Day Unique Raises": 4000, "Acceptance (OCB+PAI)": 300, "A2C tokens": 241, "Nego Received 10%": 208, "Nego token Done": 26, "Total PR": 228, "Total SI": 159, "Acceptance%": 0.075, "A2C": 0.8033, "EHB/TP": null, "Zone": "North", "days": 20}, {"Region": "NUK", "Total Inspections": 495, "Non GS Inspections": 465, "Day Unique Raises": 1060, "Acceptance (OCB+PAI)": 56, "A2C tokens": 48, "Nego Received 10%": 78, "Nego token Done": 16, "Total PR": 59, "Total SI": 46, "Acceptance%": 0.0528, "A2C": 0.8571, "EHB/TP": null, "Zone": "North", "days": 20}, {"Region": "PUN", "Total Inspections": 3001, "Non GS Inspections": 1395, "Day Unique Raises": 6099, "Acceptance (OCB+PAI)": 723, "A2C tokens": 304, "Nego Received 10%": 513, "Nego token Done": 168, "Total PR": 371, "Total SI": 275, "Acceptance%": 0.1185, "A2C": 0.4205, "EHB/TP": null, "Zone": "MH & AP", "days": 20}, {"Region": "SAP", "Total Inspections": 327, "Non GS Inspections": 302, "Day Unique Raises": 818, "Acceptance (OCB+PAI)": 34, "A2C tokens": 15, "Nego Received 10%": 30, "Nego token Done": 8, "Total PR": 19, "Total SI": 11, "Acceptance%": 0.0416, "A2C": 0.4412, "EHB/TP": null, "Zone": "MH & AP", "days": 20}, {"Region": "SKA", "Total Inspections": 754, "Non GS Inspections": 440, "Day Unique Raises": 994, "Acceptance (OCB+PAI)": 86, "A2C tokens": 12, "Nego Received 10%": 92, "Nego token Done": 15, "Total PR": 27, "Total SI": 14, "Acceptance%": 0.0865, "A2C": 0.1395, "EHB/TP": null, "Zone": "BLR", "days": 20}, {"Region": "SKL", "Total Inspections": 1198, "Non GS Inspections": 540, "Day Unique Raises": 1583, "Acceptance (OCB+PAI)": 329, "A2C tokens": 138, "Nego Received 10%": 194, "Nego token Done": 75, "Total PR": 174, "Total SI": 128, "Acceptance%": 0.2078, "A2C": 0.4195, "EHB/TP": null, "Zone": "South", "days": 20}, {"Region": "STN", "Total Inspections": 840, "Non GS Inspections": 486, "Day Unique Raises": 1087, "Acceptance (OCB+PAI)": 77, "A2C tokens": 55, "Nego Received 10%": 64, "Nego token Done": 25, "Total PR": 63, "Total SI": 43, "Acceptance%": 0.0708, "A2C": 0.7143, "EHB/TP": null, "Zone": "South", "days": 20}, {"Region": "STS", "Total Inspections": 3896, "Non GS Inspections": 1958, "Day Unique Raises": 8545, "Acceptance (OCB+PAI)": 933, "A2C tokens": 327, "Nego Received 10%": 734, "Nego token Done": 134, "Total PR": 354, "Total SI": 266, "Acceptance%": 0.1092, "A2C": 0.3505, "EHB/TP": null, "Zone": "MH & AP", "days": 20}, {"Region": "UPE", "Total Inspections": 2937, "Non GS Inspections": 1691, "Day Unique Raises": 4844, "Acceptance (OCB+PAI)": 513, "A2C tokens": 224, "Nego Received 10%": 329, "Nego token Done": 33, "Total PR": 252, "Total SI": 180, "Acceptance%": 0.1059, "A2C": 0.4366, "EHB/TP": null, "Zone": "North", "days": 20}, {"Region": "UPW", "Total Inspections": 2128, "Non GS Inspections": 1475, "Day Unique Raises": 4199, "Acceptance (OCB+PAI)": 155, "A2C tokens": 113, "Nego Received 10%": 162, "Nego token Done": 32, "Total PR": 154, "Total SI": 109, "Acceptance%": 0.0369, "A2C": 0.729, "EHB/TP": null, "Zone": "North", "days": 20}, {"Region": "WMH", "Total Inspections": 2371, "Non GS Inspections": 1530, "Day Unique Raises": 3189, "Acceptance (OCB+PAI)": 240, "A2C tokens": 142, "Nego Received 10%": 274, "Nego token Done": 105, "Total PR": 244, "Total SI": 162, "Acceptance%": 0.0753, "A2C": 0.5917, "EHB/TP": null, "Zone": "MH & AP", "days": 20}, {"Region": "WMP", "Total Inspections": 2183, "Non GS Inspections": 1495, "Day Unique Raises": 2936, "Acceptance (OCB+PAI)": 92, "A2C tokens": 65, "Nego Received 10%": 169, "Nego token Done": 75, "Total PR": 197, "Total SI": 152, "Acceptance%": 0.0313, "A2C": 0.7065, "EHB/TP": null, "Zone": "West", "days": 20}], "lmtd": [{"Region": "AMD", "Total Inspections": 3205, "Non GS Inspections": 1725, "Day Unique Raises": 3930, "Acceptance (OCB+PAI)": 457, "A2C tokens": 183, "Nego Received 10%": 446, "Nego token Done": 252, "Total PR": 393, "Total SI": 309, "Acceptance%": 0.1163, "A2C": 0.4004, "EHB/TP": 0.8884, "Zone": "West", "days": 20}, {"Region": "BLR", "Total Inspections": 5026, "Non GS Inspections": 2333, "Day Unique Raises": 7886, "Acceptance (OCB+PAI)": 1345, "A2C tokens": 705, "Nego Received 10%": 1026, "Nego token Done": 176, "Total PR": 684, "Total SI": 506, "Acceptance%": 0.1706, "A2C": 0.5242, "EHB/TP": 0.9008, "Zone": "BLR", "days": 20}, {"Region": "CHN", "Total Inspections": 2263, "Non GS Inspections": 951, "Day Unique Raises": 2175, "Acceptance (OCB+PAI)": 176, "A2C tokens": 152, "Nego Received 10%": 272, "Nego token Done": 54, "Total PR": 239, "Total SI": 176, "Acceptance%": 0.0809, "A2C": 0.8636, "EHB/TP": 0.9931, "Zone": "South", "days": 20}, {"Region": "EAS", "Total Inspections": 217, "Non GS Inspections": 217, "Day Unique Raises": 765, "Acceptance (OCB+PAI)": 11, "A2C tokens": 11, "Nego Received 10%": 40, "Nego token Done": 29, "Total PR": 48, "Total SI": 25, "Acceptance%": 0.0144, "A2C": 1.0, "EHB/TP": 1.0412, "Zone": "East", "days": 20}, {"Region": "EBR", "Total Inspections": 1046, "Non GS Inspections": 629, "Day Unique Raises": 1061, "Acceptance (OCB+PAI)": 101, "A2C tokens": 87, "Nego Received 10%": 109, "Nego token Done": 64, "Total PR": 137, "Total SI": 84, "Acceptance%": 0.0952, "A2C": 0.8614, "EHB/TP": 1.0107, "Zone": "East", "days": 20}, {"Region": "EJH", "Total Inspections": 664, "Non GS Inspections": 653, "Day Unique Raises": 920, "Acceptance (OCB+PAI)": 67, "A2C tokens": 59, "Nego Received 10%": 84, "Nego token Done": 42, "Total PR": 96, "Total SI": 53, "Acceptance%": 0.0728, "A2C": 0.8806, "EHB/TP": 1.0051, "Zone": "East", "days": 20}, {"Region": "EOR", "Total Inspections": 326, "Non GS Inspections": 318, "Day Unique Raises": 780, "Acceptance (OCB+PAI)": 83, "A2C tokens": 73, "Nego Received 10%": 71, "Nego token Done": 20, "Total PR": 86, "Total SI": 61, "Acceptance%": 0.1064, "A2C": 0.8795, "EHB/TP": 1.0318, "Zone": "East", "days": 20}, {"Region": "EWB", "Total Inspections": 1953, "Non GS Inspections": 1320, "Day Unique Raises": 3203, "Acceptance (OCB+PAI)": 302, "A2C tokens": 183, "Nego Received 10%": 301, "Nego token Done": 119, "Total PR": 281, "Total SI": 217, "Acceptance%": 0.0943, "A2C": 0.606, "EHB/TP": 0.9007, "Zone": "East", "days": 20}, {"Region": "GJN", "Total Inspections": 1862, "Non GS Inspections": 1083, "Day Unique Raises": 2933, "Acceptance (OCB+PAI)": 163, "A2C tokens": 66, "Nego Received 10%": 162, "Nego token Done": 83, "Total PR": 164, "Total SI": 113, "Acceptance%": 0.0556, "A2C": 0.4049, "EHB/TP": 0.9391, "Zone": "West", "days": 20}, {"Region": "GJS", "Total Inspections": 1943, "Non GS Inspections": 1104, "Day Unique Raises": 2896, "Acceptance (OCB+PAI)": 345, "A2C tokens": 117, "Nego Received 10%": 281, "Nego token Done": 150, "Total PR": 223, "Total SI": 180, "Acceptance%": 0.1191, "A2C": 0.3391, "EHB/TP": 0.8563, "Zone": "West", "days": 20}, {"Region": "MUM", "Total Inspections": 4950, "Non GS Inspections": 2535, "Day Unique Raises": 7772, "Acceptance (OCB+PAI)": 1189, "A2C tokens": 473, "Nego Received 10%": 1087, "Nego token Done": 406, "Total PR": 729, "Total SI": 452, "Acceptance%": 0.153, "A2C": 0.3978, "EHB/TP": 0.8859, "Zone": "MH & AP", "days": 20}, {"Region": "NDL", "Total Inspections": 16936, "Non GS Inspections": 10369, "Day Unique Raises": 39948, "Acceptance (OCB+PAI)": 2666, "A2C tokens": 1789, "Nego Received 10%": 3939, "Nego token Done": 339, "Total PR": 2030, "Total SI": 1575, "Acceptance%": 0.0667, "A2C": 0.671, "EHB/TP": 0.8519, "Zone": "North", "days": 20}, {"Region": "NHR", "Total Inspections": 2058, "Non GS Inspections": 1437, "Day Unique Raises": 4241, "Acceptance (OCB+PAI)": 180, "A2C tokens": 152, "Nego Received 10%": 173, "Nego token Done": 24, "Total PR": 165, "Total SI": 116, "Acceptance%": 0.0424, "A2C": 0.8444, "EHB/TP": 0.9341, "Zone": "North", "days": 20}, {"Region": "NPB", "Total Inspections": 2124, "Non GS Inspections": 1524, "Day Unique Raises": 4034, "Acceptance (OCB+PAI)": 218, "A2C tokens": 136, "Nego Received 10%": 131, "Nego token Done": 14, "Total PR": 136, "Total SI": 80, "Acceptance%": 0.054, "A2C": 0.6239, "EHB/TP": 0.9998, "Zone": "North", "days": 20}, {"Region": "NRJ", "Total Inspections": 2494, "Non GS Inspections": 1673, "Day Unique Raises": 4572, "Acceptance (OCB+PAI)": 329, "A2C tokens": 260, "Nego Received 10%": 186, "Nego token Done": 24, "Total PR": 244, "Total SI": 172, "Acceptance%": 0.072, "A2C": 0.7903, "EHB/TP": 1.0216, "Zone": "North", "days": 20}, {"Region": "NUK", "Total Inspections": 525, "Non GS Inspections": 494, "Day Unique Raises": 930, "Acceptance (OCB+PAI)": 52, "A2C tokens": 49, "Nego Received 10%": 27, "Nego token Done": 4, "Total PR": 43, "Total SI": 33, "Acceptance%": 0.0559, "A2C": 0.9423, "EHB/TP": 1.032, "Zone": "North", "days": 20}, {"Region": "PUN", "Total Inspections": 3244, "Non GS Inspections": 1463, "Day Unique Raises": 6487, "Acceptance (OCB+PAI)": 697, "A2C tokens": 310, "Nego Received 10%": 581, "Nego token Done": 149, "Total PR": 382, "Total SI": 263, "Acceptance%": 0.1074, "A2C": 0.4448, "EHB/TP": 0.8744, "Zone": "MH & AP", "days": 20}, {"Region": "SAP", "Total Inspections": 335, "Non GS Inspections": 320, "Day Unique Raises": 799, "Acceptance (OCB+PAI)": 15, "A2C tokens": 8, "Nego Received 10%": 35, "Nego token Done": 11, "Total PR": 18, "Total SI": 11, "Acceptance%": 0.0188, "A2C": 0.5333, "EHB/TP": 1.0167, "Zone": "MH & AP", "days": 20}, {"Region": "SKA", "Total Inspections": 786, "Non GS Inspections": 437, "Day Unique Raises": 726, "Acceptance (OCB+PAI)": 19, "A2C tokens": 12, "Nego Received 10%": 58, "Nego token Done": 14, "Total PR": 25, "Total SI": 15, "Acceptance%": 0.0262, "A2C": 0.6316, "EHB/TP": 1.0258, "Zone": "BLR", "days": 20}, {"Region": "SKL", "Total Inspections": 1292, "Non GS Inspections": 568, "Day Unique Raises": 1864, "Acceptance (OCB+PAI)": 377, "A2C tokens": 181, "Nego Received 10%": 204, "Nego token Done": 61, "Total PR": 193, "Total SI": 140, "Acceptance%": 0.2023, "A2C": 0.4801, "EHB/TP": 0.8872, "Zone": "South", "days": 20}, {"Region": "STN", "Total Inspections": 935, "Non GS Inspections": 537, "Day Unique Raises": 1321, "Acceptance (OCB+PAI)": 79, "A2C tokens": 55, "Nego Received 10%": 68, "Nego token Done": 16, "Total PR": 59, "Total SI": 37, "Acceptance%": 0.0598, "A2C": 0.6962, "EHB/TP": 1.0491, "Zone": "South", "days": 20}, {"Region": "STS", "Total Inspections": 4217, "Non GS Inspections": 2146, "Day Unique Raises": 10773, "Acceptance (OCB+PAI)": 995, "A2C tokens": 406, "Nego Received 10%": 863, "Nego token Done": 126, "Total PR": 368, "Total SI": 274, "Acceptance%": 0.0924, "A2C": 0.408, "EHB/TP": 0.8722, "Zone": "MH & AP", "days": 20}, {"Region": "UPE", "Total Inspections": 2927, "Non GS Inspections": 1920, "Day Unique Raises": 4198, "Acceptance (OCB+PAI)": 261, "A2C tokens": 205, "Nego Received 10%": 212, "Nego token Done": 36, "Total PR": 217, "Total SI": 179, "Acceptance%": 0.0622, "A2C": 0.7854, "EHB/TP": 1.0158, "Zone": "North", "days": 20}, {"Region": "UPW", "Total Inspections": 1908, "Non GS Inspections": 1470, "Day Unique Raises": 4928, "Acceptance (OCB+PAI)": 187, "A2C tokens": 129, "Nego Received 10%": 191, "Nego token Done": 25, "Total PR": 159, "Total SI": 122, "Acceptance%": 0.0379, "A2C": 0.6898, "EHB/TP": 0.9433, "Zone": "North", "days": 20}, {"Region": "WMH", "Total Inspections": 2500, "Non GS Inspections": 1630, "Day Unique Raises": 3608, "Acceptance (OCB+PAI)": 215, "A2C tokens": 138, "Nego Received 10%": 330, "Nego token Done": 109, "Total PR": 238, "Total SI": 152, "Acceptance%": 0.0596, "A2C": 0.6419, "EHB/TP": 0.9043, "Zone": "MH & AP", "days": 20}, {"Region": "WMP", "Total Inspections": 2216, "Non GS Inspections": 1557, "Day Unique Raises": 3290, "Acceptance (OCB+PAI)": 151, "A2C tokens": 119, "Nego Received 10%": 217, "Nego token Done": 76, "Total PR": 197, "Total SI": 147, "Acceptance%": 0.0459, "A2C": 0.7881, "EHB/TP": 1.004, "Zone": "West", "days": 20}], "mtd_zone": [{"Zone": "BLR", "Total Inspections": 5670, "Non GS Inspections": 2710, "Day Unique Raises": 8767, "Acceptance (OCB+PAI)": 1554, "A2C tokens": 715, "Total PR": 675, "Total SI": 483, "Acceptance%": 0.1773, "A2C%": 0.4601, "PR_SI_rate": 0.7156}, {"Zone": "East", "Total Inspections": 3807, "Non GS Inspections": 2854, "Day Unique Raises": 6311, "Acceptance (OCB+PAI)": 528, "A2C tokens": 356, "Total PR": 617, "Total SI": 443, "Acceptance%": 0.0837, "A2C%": 0.6742, "PR_SI_rate": 0.718}, {"Zone": "MH & AP", "Total Inspections": 13788, "Non GS Inspections": 7236, "Day Unique Raises": 25119, "Acceptance (OCB+PAI)": 3133, "A2C tokens": 1234, "Total PR": 1628, "Total SI": 1133, "Acceptance%": 0.1247, "A2C%": 0.3939, "PR_SI_rate": 0.6959}, {"Zone": "North", "Total Inspections": 28889, "Non GS Inspections": 17668, "Day Unique Raises": 64196, "Acceptance (OCB+PAI)": 4842, "A2C tokens": 2777, "Total PR": 3152, "Total SI": 2363, "Acceptance%": 0.0754, "A2C%": 0.5735, "PR_SI_rate": 0.7497}, {"Zone": "South", "Total Inspections": 4224, "Non GS Inspections": 1884, "Day Unique Raises": 4572, "Acceptance (OCB+PAI)": 547, "A2C tokens": 310, "Total PR": 453, "Total SI": 349, "Acceptance%": 0.1196, "A2C%": 0.5667, "PR_SI_rate": 0.7704}, {"Zone": "West", "Total Inspections": 8878, "Non GS Inspections": 4984, "Day Unique Raises": 12384, "Acceptance (OCB+PAI)": 1241, "A2C tokens": 368, "Total PR": 942, "Total SI": 734, "Acceptance%": 0.1002, "A2C%": 0.2965, "PR_SI_rate": 0.7792}], "lmtd_zone": [{"Zone": "BLR", "Total Inspections": 5812, "Non GS Inspections": 2770, "Day Unique Raises": 8612, "Acceptance (OCB+PAI)": 1364, "A2C tokens": 717, "Total PR": 709, "Total SI": 521, "Acceptance%": 0.1584, "A2C%": 0.5257, "PR_SI_rate": 0.7348}, {"Zone": "East", "Total Inspections": 4206, "Non GS Inspections": 3137, "Day Unique Raises": 6729, "Acceptance (OCB+PAI)": 564, "A2C tokens": 413, "Total PR": 648, "Total SI": 440, "Acceptance%": 0.0838, "A2C%": 0.7323, "PR_SI_rate": 0.679}, {"Zone": "MH & AP", "Total Inspections": 15246, "Non GS Inspections": 8094, "Day Unique Raises": 29439, "Acceptance (OCB+PAI)": 3111, "A2C tokens": 1335, "Total PR": 1735, "Total SI": 1152, "Acceptance%": 0.1057, "A2C%": 0.4291, "PR_SI_rate": 0.664}, {"Zone": "North", "Total Inspections": 28972, "Non GS Inspections": 18887, "Day Unique Raises": 62851, "Acceptance (OCB+PAI)": 3893, "A2C tokens": 2720, "Total PR": 2994, "Total SI": 2277, "Acceptance%": 0.0619, "A2C%": 0.6987, "PR_SI_rate": 0.7605}, {"Zone": "South", "Total Inspections": 4490, "Non GS Inspections": 2056, "Day Unique Raises": 5360, "Acceptance (OCB+PAI)": 632, "A2C tokens": 388, "Total PR": 491, "Total SI": 353, "Acceptance%": 0.1179, "A2C%": 0.6139, "PR_SI_rate": 0.7189}, {"Zone": "West", "Total Inspections": 9226, "Non GS Inspections": 5469, "Day Unique Raises": 13049, "Acceptance (OCB+PAI)": 1116, "A2C tokens": 485, "Total PR": 977, "Total SI": 749, "Acceptance%": 0.0855, "A2C%": 0.4346, "PR_SI_rate": 0.7666}], "trend": [{"Date": "2026-04-21", "Total Inspections": 3138, "Day Unique Raises": 6316, "Acceptance (OCB+PAI)": 457, "A2C tokens": 285, "Total PR": 363, "Total SI": 291, "Accept%": 0.0724, "A2C%": 0.6236}, {"Date": "2026-04-22", "Total Inspections": 2888, "Day Unique Raises": 6027, "Acceptance (OCB+PAI)": 474, "A2C tokens": 321, "Total PR": 383, "Total SI": 323, "Accept%": 0.0786, "A2C%": 0.6772}, {"Date": "2026-04-23", "Total Inspections": 3012, "Day Unique Raises": 6255, "Acceptance (OCB+PAI)": 470, "A2C tokens": 268, "Total PR": 366, "Total SI": 258, "Accept%": 0.0751, "A2C%": 0.5702}, {"Date": "2026-04-24", "Total Inspections": 2846, "Day Unique Raises": 5898, "Acceptance (OCB+PAI)": 481, "A2C tokens": 284, "Total PR": 371, "Total SI": 280, "Accept%": 0.0816, "A2C%": 0.5904}, {"Date": "2026-04-25", "Total Inspections": 3924, "Day Unique Raises": 6710, "Acceptance (OCB+PAI)": 958, "A2C tokens": 388, "Total PR": 363, "Total SI": 298, "Accept%": 0.1428, "A2C%": 0.405}, {"Date": "2026-04-26", "Total Inspections": 3928, "Day Unique Raises": 6158, "Acceptance (OCB+PAI)": 490, "A2C tokens": 297, "Total PR": 366, "Total SI": 286, "Accept%": 0.0796, "A2C%": 0.6061}, {"Date": "2026-04-27", "Total Inspections": 3144, "Day Unique Raises": 6156, "Acceptance (OCB+PAI)": 475, "A2C tokens": 282, "Total PR": 359, "Total SI": 302, "Accept%": 0.0772, "A2C%": 0.5937}, {"Date": "2026-04-28", "Total Inspections": 2991, "Day Unique Raises": 6171, "Acceptance (OCB+PAI)": 434, "A2C tokens": 281, "Total PR": 364, "Total SI": 288, "Accept%": 0.0703, "A2C%": 0.6475}, {"Date": "2026-04-29", "Total Inspections": 2833, "Day Unique Raises": 5982, "Acceptance (OCB+PAI)": 429, "A2C tokens": 268, "Total PR": 339, "Total SI": 309, "Accept%": 0.0717, "A2C%": 0.6247}, {"Date": "2026-04-30", "Total Inspections": 2888, "Day Unique Raises": 5479, "Acceptance (OCB+PAI)": 402, "A2C tokens": 229, "Total PR": 275, "Total SI": 295, "Accept%": 0.0734, "A2C%": 0.5697}, {"Date": "2026-05-01", "Total Inspections": 3020, "Day Unique Raises": 5604, "Acceptance (OCB+PAI)": 713, "A2C tokens": 259, "Total PR": 356, "Total SI": 176, "Accept%": 0.1272, "A2C%": 0.3633}, {"Date": "2026-05-02", "Total Inspections": 3665, "Day Unique Raises": 5683, "Acceptance (OCB+PAI)": 455, "A2C tokens": 286, "Total PR": 370, "Total SI": 233, "Accept%": 0.0801, "A2C%": 0.6286}, {"Date": "2026-05-03", "Total Inspections": 4068, "Day Unique Raises": 5781, "Acceptance (OCB+PAI)": 487, "A2C tokens": 294, "Total PR": 383, "Total SI": 268, "Accept%": 0.0842, "A2C%": 0.6037}, {"Date": "2026-05-04", "Total Inspections": 3041, "Day Unique Raises": 6020, "Acceptance (OCB+PAI)": 446, "A2C tokens": 292, "Total PR": 363, "Total SI": 288, "Accept%": 0.0741, "A2C%": 0.6547}, {"Date": "2026-05-05", "Total Inspections": 3127, "Day Unique Raises": 5901, "Acceptance (OCB+PAI)": 460, "A2C tokens": 281, "Total PR": 390, "Total SI": 280, "Accept%": 0.078, "A2C%": 0.6109}, {"Date": "2026-05-06", "Total Inspections": 2996, "Day Unique Raises": 6498, "Acceptance (OCB+PAI)": 748, "A2C tokens": 302, "Total PR": 367, "Total SI": 298, "Accept%": 0.1151, "A2C%": 0.4037}, {"Date": "2026-05-07", "Total Inspections": 2908, "Day Unique Raises": 5863, "Acceptance (OCB+PAI)": 462, "A2C tokens": 293, "Total PR": 387, "Total SI": 261, "Accept%": 0.0788, "A2C%": 0.6342}, {"Date": "2026-05-08", "Total Inspections": 2791, "Day Unique Raises": 5703, "Acceptance (OCB+PAI)": 460, "A2C tokens": 310, "Total PR": 403, "Total SI": 301, "Accept%": 0.0807, "A2C%": 0.6739}, {"Date": "2026-05-09", "Total Inspections": 4032, "Day Unique Raises": 7086, "Acceptance (OCB+PAI)": 809, "A2C tokens": 313, "Total PR": 364, "Total SI": 292, "Accept%": 0.1142, "A2C%": 0.3869}, {"Date": "2026-05-10", "Total Inspections": 4441, "Day Unique Raises": 5941, "Acceptance (OCB+PAI)": 648, "A2C tokens": 310, "Total PR": 412, "Total SI": 269, "Accept%": 0.1091, "A2C%": 0.4784}, {"Date": "2026-05-11", "Total Inspections": 3086, "Day Unique Raises": 6329, "Acceptance (OCB+PAI)": 575, "A2C tokens": 275, "Total PR": 365, "Total SI": 327, "Accept%": 0.0909, "A2C%": 0.4783}, {"Date": "2026-05-12", "Total Inspections": 3293, "Day Unique Raises": 6607, "Acceptance (OCB+PAI)": 659, "A2C tokens": 301, "Total PR": 385, "Total SI": 322, "Accept%": 0.0997, "A2C%": 0.4568}, {"Date": "2026-05-13", "Total Inspections": 3074, "Day Unique Raises": 6160, "Acceptance (OCB+PAI)": 603, "A2C tokens": 306, "Total PR": 386, "Total SI": 306, "Accept%": 0.0979, "A2C%": 0.5075}, {"Date": "2026-05-14", "Total Inspections": 3145, "Day Unique Raises": 6108, "Acceptance (OCB+PAI)": 626, "A2C tokens": 295, "Total PR": 405, "Total SI": 303, "Accept%": 0.1025, "A2C%": 0.4712}, {"Date": "2026-05-15", "Total Inspections": 3040, "Day Unique Raises": 5943, "Acceptance (OCB+PAI)": 602, "A2C tokens": 299, "Total PR": 392, "Total SI": 284, "Accept%": 0.1013, "A2C%": 0.4967}, {"Date": "2026-05-16", "Total Inspections": 4019, "Day Unique Raises": 6291, "Acceptance (OCB+PAI)": 715, "A2C tokens": 347, "Total PR": 399, "Total SI": 289, "Accept%": 0.1137, "A2C%": 0.4853}, {"Date": "2026-05-17", "Total Inspections": 4309, "Day Unique Raises": 6127, "Acceptance (OCB+PAI)": 674, "A2C tokens": 289, "Total PR": 392, "Total SI": 284, "Accept%": 0.11, "A2C%": 0.4288}, {"Date": "2026-05-18", "Total Inspections": 3060, "Day Unique Raises": 6148, "Acceptance (OCB+PAI)": 647, "A2C tokens": 293, "Total PR": 374, "Total SI": 333, "Accept%": 0.1052, "A2C%": 0.4529}, {"Date": "2026-05-19", "Total Inspections": 3356, "Day Unique Raises": 6502, "Acceptance (OCB+PAI)": 649, "A2C tokens": 289, "Total PR": 411, "Total SI": 319, "Accept%": 0.0998, "A2C%": 0.4453}, {"Date": "2026-05-20", "Total Inspections": 785, "Day Unique Raises": 5054, "Acceptance (OCB+PAI)": 407, "A2C tokens": 126, "Total PR": 163, "Total SI": 72, "Accept%": 0.0805, "A2C%": 0.3096}], "zone_map": {"NDL": "North", "UPE": "North", "UPW": "North", "NPB": "North", "NRJ": "North", "NUK": "North", "NHR": "North", "WMP": "West", "AMD": "West", "GJS": "West", "GJN": "West", "EWB": "East", "EAS": "East", "EOR": "East", "EBR": "East", "EJH": "East", "MUM": "MH & AP", "PUN": "MH & AP", "WMH": "MH & AP", "SAP": "MH & AP", "STS": "MH & AP", "BLR": "BLR", "SKA": "BLR", "CHN": "South", "SKL": "South", "STN": "South"}, "zone_leader": {"North": "Aashendra & Dashrath", "West": "Ranish & Deepak", "East": "Suvodip", "MH & AP": "Amitesh & Abhinav", "BLR": "Edwin", "South": "Thiru"}};
+</script>
+<script>
+// ── HELPERS ─────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const fmt = (v, type='num') => {
+  if (v === null || v === undefined || (typeof v==='number'&&isNaN(v))) return '—';
+  if (type==='pct') return (v*100).toFixed(1)+'%';
+  if (type==='x')   return v.toFixed(2)+'x';
+  if (type==='dec') return v.toFixed(2);
+  return Math.round(v).toLocaleString('en-IN');
+};
+const pct = (n,d) => d>0 ? n/d : null;
+const sum = (arr,k) => arr.reduce((a,r)=>a+(r[k]||0),0);
+const avgF = (arr,k) => { const v=arr.filter(r=>r[k]!=null&&!isNaN(r[k])); return v.length?v.reduce((a,r)=>a+r[k],0)/v.length:null; };
+
+const TH = { accept:{good:.08,warn:.055}, a2c:{good:.80,warn:.60} };
+
+const deltaEl = (d1,d2,type='num',invert=false)=>{
+  if(d2===null||d2===undefined) return `<span class="kpi-delta flat">—</span>`;
+  const diff=d1-d2, isUp=diff>0, isGood=invert?!isUp:isUp;
+  const cls=diff===0?'flat':isGood?'up':'down';
+  const arrow=diff>0?'↑':diff<0?'↓':'→';
+  const lbl=type==='pct'?`${arrow} ${Math.abs(diff*100).toFixed(1)}pp`:`${arrow} ${fmt(Math.abs(diff))}`;
+  return `<span class="kpi-delta ${cls}">${lbl}</span>`;
+};
+
+const chipEl=(v,type,th)=>{
+  if(v===null||v===undefined) return `<span class="chip chip-gray">—</span>`;
+  let cls,lbl;
+  if(type==='pct'){
+    lbl=(v*100).toFixed(1)+'%';
+    cls=th?(v>=th.good?'chip-green':v>=th.warn?'chip-amber':'chip-red'):'chip-blue';
+  }else if(type==='x'){
+    lbl=v.toFixed(2)+'x';
+    cls=v<=1.0?'chip-green':v<=1.1?'chip-amber':'chip-red';
+  }else{ lbl=fmt(v); cls='chip-blue'; }
+  return `<span class="chip ${cls}">${lbl}</span>`;
+};
+
+function fmtDate(d,short=false){
+  const dt=new Date(d);
+  return short
+    ? dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'})
+    : dt.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'2-digit'});
+}
+
+let activeZone='all';
+let CHARTS={};
+const ZONE_ORDER=['North','West','East','MH & AP','BLR','South'];
+const ZONE_ABBR={'North':'NTH','West':'WST','East':'EST','MH & AP':'MHAP','BLR':'BLR','South':'STH'};
+const ZONE_COLORS={'North':'#1A4A7A','West':'#4A2A7A','East':'#2D6A4A','MH & AP':'#8B5E00','BLR':'#9B2B2B','South':'#C4500A'};
+
+// ── MAIN ────────────────────────────────────────────
+function boot(){
+  // header
+  $('d1-chip').textContent='D-1: '+fmtDate(DATA.d1_date,true);
+  $('d2-chip').textContent='vs D-2: '+fmtDate(DATA.d2_date,true);
+  $('hero-month').textContent=new Date(DATA.d1_date).toLocaleString('en-IN',{month:'long'});
+
+  // hero meta
+  const d1 = DATA.d1.filter(r=>activeZone==='all'||r.Zone===activeZone);
+  const d2 = DATA.d2.filter(r=>activeZone==='all'||r.Zone===activeZone);
+  const mtd = DATA.mtd.filter(r=>activeZone==='all'||r.Zone===activeZone);
+  const lmtd = DATA.lmtd.filter(r=>activeZone==='all'||r.Zone===activeZone);
+
+  $('hero-meta').innerHTML=`
+    <div class="hero-meta-item">MTD days <b>${DATA.mtd_days}</b></div>
+    <div class="hero-meta-item">·</div>
+    <div class="hero-meta-item">LMTD days <b>${DATA.lmtd_days}</b></div>
+    <div class="hero-meta-item">·</div>
+    <div class="hero-meta-item">MTD <b>${fmtDate(DATA.mtd_start,true)} → ${fmtDate(DATA.d1_date,true)}</b></div>
+    <div class="hero-meta-item">·</div>
+    <div class="hero-meta-item">LMTD <b>${fmtDate(DATA.lmtd_start,true)} → ${fmtDate(DATA.lmtd_end,true)}</b></div>
+  `;
+
+  renderAlerts(d1,d2,mtd,lmtd);
+  renderZoneStories(mtd,lmtd);
+  renderKPIs(d1,d2);
+  renderZoneScorecard(mtd,lmtd);
+  renderFunnel(d1,d2);
+  renderMatrix(mtd,lmtd);
+  renderSpotlight(d1,d2);
+  setTimeout(renderCharts,60);
+}
+
+// §1 ALERTS
+function renderAlerts(d1,d2,mtd,lmtd){
+  const alerts=[];
+
+  // Zero SI despite PRs
+  const zeroSI=d1.filter(r=>(r['Total PR']||0)>=4&&!(r['Total SI']));
+  if(zeroSI.length) alerts.push({sev:'critical',icon:'🚨',
+    title:`Pickup blocked — ${zeroSI.length} region${zeroSI.length>1?'s':''}`,
+    desc:'PRs released but zero cars reached yard. Driver allocation or OTP handover stuck.',
+    regions:zeroSI.map(r=>r.Region).join(', '),action:'Escalate to Ops'});
+
+  // Low A2C
+  const lowA2C=d1.filter(r=>r['A2C']!==null&&r['A2C']<TH.a2c.warn&&(r['Acceptance (OCB+PAI)']||0)>=3);
+  if(lowA2C.length) alerts.push({sev:'critical',icon:'💔',
+    title:`Low A2C conversion — ${lowA2C.length} region${lowA2C.length>1?'s':''}`,
+    desc:'Accepted cars not converting to tokens. Sellers backing out or price gap too wide post-auction.',
+    regions:lowA2C.map(r=>r.Region).join(', '),action:'RA + PA Review'});
+
+  // Low acceptance
+  const lowAcc=d1.filter(r=>r['Acceptance%']!==null&&r['Acceptance%']<TH.accept.warn&&(r['Day Unique Raises']||0)>=10);
+  if(lowAcc.length) alerts.push({sev:'critical',icon:'📉',
+    title:`Low acceptance rate — ${lowAcc.length} region${lowAcc.length>1?'s':''}`,
+    desc:'Auction acceptance below 5.5%. Check system blocks and RA negotiation quality.',
+    regions:lowAcc.map(r=>r.Region).join(', '),action:'Check System'});
+
+  // High EHB/TP
+  const highEHB=d1.filter(r=>r['EHB/TP']!==null&&r['EHB/TP']>1.10);
+  if(highEHB.length) alerts.push({sev:'warning',icon:'⚠️',
+    title:`Seller over-pricing — ${highEHB.length} region${highEHB.length>1?'s':''}`,
+    desc:'EHB/TP > 1.10× — sellers anchoring well above target. RAs need stronger TP anchoring.',
+    regions:highEHB.map(r=>r.Region).join(', '),action:'RA Script Review'});
+
+  // PR-SI lag
+  const lag=d1.filter(r=>(r['Total PR']||0)-(r['Total SI']||0)>4);
+  if(lag.length) alerts.push({sev:'warning',icon:'🚗',
+    title:`Pickup lag — ${lag.length} region${lag.length>1?'s':''}`,
+    desc:'Token done, PR released, but car not yet at yard. Chase sellers for pickup slot.',
+    regions:lag.map(r=>`${r.Region}(PR:${r['Total PR']} SI:${r['Total SI']})`).join(', '),action:'Chase Pickup'});
+
+  // Stars
+  const stars=d1.filter(r=>r['A2C']>=TH.a2c.good&&r['Acceptance%']>=TH.accept.good&&(r['Acceptance (OCB+PAI)']||0)>=5);
+  if(stars.length) alerts.push({sev:'good',icon:'🌟',
+    title:`Star performers — ${stars.length} region${stars.length>1?'s':''}`,
+    desc:'Strong acceptance AND A2C. Share their RA approach across the zone as best practice.',
+    regions:stars.map(r=>r.Region).join(', '),action:'Replicate!'});
+
+  if(!alerts.length) alerts.push({sev:'good',icon:'✅',title:'All clear',
+    desc:'No critical flags detected for this date and filter.',regions:'',action:'Green!'});
+
+  $('alert-count-label').textContent=`${alerts.filter(a=>a.sev==='critical').length} critical · ${alerts.filter(a=>a.sev==='warning').length} warnings`;
+  $('hawk-row').innerHTML=alerts.map(a=>`
+    <div class="hawk-item sev-${a.sev}">
+      <div class="hawk-icon">${a.icon}</div>
+      <div class="hawk-body">
+        <div class="hawk-title">${a.title}</div>
+        <div class="hawk-desc">${a.desc}</div>
+        ${a.regions?`<div class="hawk-regions">📍 ${a.regions}</div>`:''}
+      </div>
+      <div class="hawk-action">${a.action}</div>
+    </div>`).join('');
+}
+
+// §2 ZONE STORIES
+function renderZoneStories(mtd,lmtd){
+  const lmtdMap={};
+  lmtd.forEach(r=>{ lmtdMap[r.Zone]=(lmtdMap[r.Zone]||0)+(r['Total PR']||0); });
+
+  const mtdZone={};
+  mtd.forEach(r=>{
+    const z=r.Zone; if(!mtdZone[z]) mtdZone[z]={pr:0,si:0,accept:0,raises:0,a2c:0,insp:0};
+    mtdZone[z].pr+=(r['Total PR']||0);
+    mtdZone[z].si+=(r['Total SI']||0);
+    mtdZone[z].accept+=(r['Acceptance (OCB+PAI)']||0);
+    mtdZone[z].raises+=(r['Day Unique Raises']||0);
+    mtdZone[z].a2c+=(r['A2C tokens']||0);
+    mtdZone[z].insp+=(r['Total Inspections']||0);
+  });
+
+  function health(z){
+    const v=mtdZone[z]; if(!v) return 'ring-amber';
+    const acc=v.raises>0?v.accept/v.raises:0;
+    const a2c=v.accept>0?v.a2c/v.accept:0;
+    const sc=(acc>=TH.accept.good?1:acc>=TH.accept.warn?.5:0)+(a2c>=TH.a2c.good?1:a2c>=TH.a2c.warn?.5:0);
+    return sc>=1.5?'ring-green':sc>=.5?'ring-amber':'ring-red';
+  }
+
+  const html=ZONE_ORDER.map(z=>{
+    const v=mtdZone[z]||{pr:0};
+    const prev=lmtdMap[z]||0;
+    const delta=prev>0?((v.pr-prev)/prev*100).toFixed(0):0;
+    const dcls=delta>0?'zdelta-up':delta<0?'zdelta-down':'zdelta-flat';
+    const darrow=delta>0?'↑':delta<0?'↓':'→';
+    const isActive=activeZone===z;
+    return `<div class="zone-pill-wrap${isActive?' zone-active':''}" onclick="filterZone('${z}')">
+      <div class="zone-ring ${health(z)} ${isActive?'ring-active':''}">${ZONE_ABBR[z]||z}</div>
+      <div class="zone-pill-name">${z}</div>
+      <div class="zone-pill-sub">${DATA.zone_leader[z]||'—'}</div>
+      <div class="zone-pill-delta ${dcls}">${darrow}${Math.abs(delta)}% PR</div>
+    </div>`;
+  }).join('');
+
+  const allActive=activeZone==='all';
+  const allDeltaRaw=Object.values(lmtdMap).reduce((a,v)=>a+v,0);
+  const allMTDPR=Object.values(mtdZone).reduce((a,v)=>a+(v.pr||0),0);
+  const allDelta=allDeltaRaw>0?((allMTDPR-allDeltaRaw)/allDeltaRaw*100).toFixed(0):0;
+  const allDCls=allDelta>0?'zdelta-up':allDelta<0?'zdelta-down':'zdelta-flat';
+  const allArrow=allDelta>0?'↑':allDelta<0?'↓':'→';
+
+  $('zone-stories').innerHTML=`
+    <div class="zone-pill-wrap${allActive?' zone-active':''}" onclick="filterZone('all')">
+      <div class="zone-ring ${allActive?'ring-active':'ring-green'}" style="${!allActive?'background:var(--accent-bg);color:var(--accent);border-color:var(--accent-rule)':''}">ALL</div>
+      <div class="zone-pill-name">All India</div>
+      <div class="zone-pill-sub">National</div>
+      <div class="zone-pill-delta ${allDCls}">${allArrow}${Math.abs(allDelta)}% PR</div>
+    </div>
+    ${html}`;
+}
+
+function filterZone(z){
+  activeZone=z;
+  boot();
+}
+
+// §3 KPIs
+function renderKPIs(d1,d2){
+  const d2Map={}; d2.forEach(r=>{d2Map[r.Region]=r;});
+
+  const s1i=sum(d1,'Total Inspections'),s2i=sum(d2,'Total Inspections');
+  const s1r=sum(d1,'Day Unique Raises'),s2r=sum(d2,'Day Unique Raises');
+  const s1a=sum(d1,'Acceptance (OCB+PAI)'),s2a=sum(d2,'Acceptance (OCB+PAI)');
+  const s1t=sum(d1,'A2C tokens'),s2t=sum(d2,'A2C tokens');
+  const s1p=sum(d1,'Total PR'),s2p=sum(d2,'Total PR');
+  const s1s=sum(d1,'Total SI'),s2s=sum(d2,'Total SI');
+  const ap1=pct(s1a,s1r),ap2=pct(s2a,s2r);
+  const at1=pct(s1t,s1a),at2=pct(s2t,s2a);
+
+  const cards=[
+    {label:'Inspections',val:s1i,prev:s2i,color:'#1A4A7A',type:'num',sub:`D-2: ${fmt(s2i)}`},
+    {label:'Day Unique Raises',val:s1r,prev:s2r,color:'#4A2A7A',type:'num',sub:`D-2: ${fmt(s2r)}`},
+    {label:'Acceptance Rate',val:ap1,prev:ap2,color:ap1>=TH.accept.good?'#2D6A4A':ap1>=TH.accept.warn?'#8B5E00':'#9B2B2B',type:'pct',sub:`Accepted: ${fmt(s1a)} · D-2: ${fmt(ap2,'pct')}`},
+    {label:'A2C Conversion',val:at1,prev:at2,color:at1>=TH.a2c.good?'#2D6A4A':at1>=TH.a2c.warn?'#8B5E00':'#9B2B2B',type:'pct',sub:`Tokens: ${fmt(s1t)} · D-2: ${fmt(at2,'pct')}`},
+    {label:'Payment Releases',val:s1p,prev:s2p,color:'#C4500A',type:'num',sub:`D-2: ${fmt(s2p)}`},
+    {label:'Stock Inwards',val:s1s,prev:s2s,color:'#2D6A4A',type:'num',sub:`D-2: ${fmt(s2s)}`},
+    {label:'PR → SI Rate',val:pct(s1s,s1p),prev:pct(s2s,s2p),color:'#1A4A6A',type:'pct',sub:`D-2: ${fmt(pct(s2s,s2p),'pct')}`},
+    {label:'Nego Tokens',val:sum(d1,'Nego token Done'),prev:sum(d2,'Nego token Done'),color:'#5A5850',type:'num',sub:'Deal rescue attempts'},
+  ];
+
+  $('kpi-grid').innerHTML=cards.map(c=>`
+    <div class="kpi">
+      <div class="kpi-label">${c.label}</div>
+      <div class="kpi-val" style="color:${c.color}">${c.type==='pct'?fmt(c.val,'pct'):fmt(c.val)}</div>
+      ${deltaEl(c.val,c.prev,c.type)}
+      <div class="kpi-sub">${c.sub}</div>
+      ${c.type!=='pct'?`<div class="kpi-bar"><div class="kpi-bar-fill" style="width:${c.prev>0?Math.min(c.val/c.prev*70,100):50}%;background:${c.color}40"></div></div>`:''}
+    </div>`).join('');
+}
+
+// §4 ZONE SCORECARD
+function renderZoneScorecard(mtd,lmtd){
+  const buildZone=(arr)=>{
+    const m={};
+    arr.forEach(r=>{
+      const z=r.Zone; if(!m[z]) m[z]={insp:0,pr:0,si:0,accept:0,raises:0,a2c:0};
+      m[z].insp+=(r['Total Inspections']||0);
+      m[z].pr+=(r['Total PR']||0);
+      m[z].si+=(r['Total SI']||0);
+      m[z].accept+=(r['Acceptance (OCB+PAI)']||0);
+      m[z].raises+=(r['Day Unique Raises']||0);
+      m[z].a2c+=(r['A2C tokens']||0);
+    });
+    return m;
+  };
+  const mz=buildZone(mtd), lz=buildZone(lmtd);
+
+  $('zone-scorecard').innerHTML=ZONE_ORDER.map(z=>{
+    const m=mz[z]||{}, l=lz[z]||{};
+    const accM=pct(m.accept,m.raises), accL=pct(l.accept,l.raises);
+    const a2cM=pct(m.a2c,m.accept), a2cL=pct(l.a2c,l.accept);
+    const prDelta=l.pr>0?(m.pr-l.pr)/l.pr:0;
+    const prCls=prDelta>0.02?'zdm-up':prDelta<-0.02?'zdm-dn':'zdm-flat';
+    const prArrow=prDelta>0?'↑':prDelta<0?'↓':'→';
+
+    const metricRow=(label,mv,lv,type,invert=false)=>{
+      if(mv===null&&lv===null) return '';
+      const diff=mv!==null&&lv!==null?mv-lv:null;
+      const isUp=diff>0, isGood=invert?!isUp:isUp;
+      const dcls=diff===null?'zdm-flat':Math.abs(diff)<.001?'zdm-flat':isGood?'zdm-up':'zdm-dn';
+      const darrow=diff===null?'→':diff>0?'↑':diff<0?'↓':'→';
+      return `<div class="zone-metric">
+        <div class="zone-metric-label">${label}</div>
+        <div class="zone-metric-val">${mv!==null?fmt(mv,type):'—'}</div>
+        <div class="zone-metric-delta ${dcls}">${darrow} vs LMTD: ${lv!==null?fmt(lv,type):'—'}</div>
+      </div>`;
+    };
+
+    return `<div class="zone-card">
+      <div class="zone-card-header">
+        <div>
+          <div class="zone-card-name">${z}</div>
+          <div class="zone-card-leader">${DATA.zone_leader[z]||'—'}</div>
+        </div>
+        <span class="chip ${prDelta>=0.02?'chip-green':prDelta<=-0.02?'chip-red':'chip-gray'}">
+          ${prArrow}${(Math.abs(prDelta)*100).toFixed(0)}% PR
+        </span>
+      </div>
+      <div class="zone-card-metrics">
+        ${metricRow('Inspections',m.insp||null,l.insp||null,'num')}
+        ${metricRow('Accept %',accM,accL,'pct')}
+        ${metricRow('A2C %',a2cM,a2cL,'pct')}
+        ${metricRow('SIs',m.si||null,l.si||null,'num')}
+      </div>
+      <div class="zone-card-footer">
+        <div>
+          <div class="zone-card-pr">${fmt(m.pr||0)}</div>
+          <div class="zone-card-pr-label">MTD PRs</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:13px;font-weight:700;color:var(--ink2)">${fmt(l.pr||0)}</div>
+          <div class="zone-card-pr-label">LMTD PRs</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// §5 FUNNEL
+function renderFunnel(d1,d2){
+  const sv=(arr,k)=>sum(arr,k);
+  const d1I=sv(d1,'Total Inspections'),d2I=sv(d2,'Total Inspections');
+  const d1R=sv(d1,'Day Unique Raises'),d2R=sv(d2,'Day Unique Raises');
+  const d1A=sv(d1,'Acceptance (OCB+PAI)'),d2A=sv(d2,'Acceptance (OCB+PAI)');
+  const d1T=sv(d1,'A2C tokens'),d2T=sv(d2,'A2C tokens');
+  const d1P=sv(d1,'Total PR'),d2P=sv(d2,'Total PR');
+  const d1S=sv(d1,'Total SI'),d2S=sv(d2,'Total SI');
+
+  const steps=[
+    {name:'Inspections Done',owner:'CJ Team',d1v:d1I,d2v:d2I,base1:d1I,base2:d2I,color:'#1A4A7A'},
+    {name:'Day Unique Raises',owner:'RA Team',d1v:d1R,d2v:d2R,base1:d1I,base2:d2I,color:'#4A2A7A'},
+    {name:'Accepted (OCB+PAI)',owner:'RA Negotiation',d1v:d1A,d2v:d2A,base1:d1R,base2:d2R,color:'#2D6A4A'},
+    {name:'A2C Tokens',owner:'RA + PA',d1v:d1T,d2v:d2T,base1:d1A,base2:d2A,color:'#8B5E00'},
+    {name:'Payment Releases',owner:'RA + Ops',d1v:d1P,d2v:d2P,base1:d1T,base2:d2T,color:'#C4500A'},
+    {name:'Stock Inwards',owner:'Driver + Ops',d1v:d1S,d2v:d2S,base1:d1P,base2:d2P,color:'#9B2B2B'},
+  ];
+  const maxV=Math.max(...steps.map(s=>Math.max(s.d1v,s.d2v)));
+
+  $('funnel-wrap').innerHTML=steps.map((s,i)=>{
+    const conv1=i===0?100:s.base1>0?s.d1v/s.base1*100:0;
+    const conv2=i===0?100:s.base2>0?s.d2v/s.base2*100:0;
+    const convDiff=conv1-conv2;
+    const convcls=convDiff>0.5?'funnel-delta up':convDiff<-0.5?'funnel-delta dn':'funnel-delta flat';
+    const w1=maxV>0?s.d1v/maxV*100:0, w2=maxV>0?s.d2v/maxV*100:0;
+    const vDiff=s.d1v-s.d2v;
+    const valcls=vDiff>0?'funnel-delta up':vDiff<0?'funnel-delta dn':'funnel-delta flat';
+    return `<div class="funnel-step">
+      <div class="funnel-step-head">
+        <div class="funnel-step-left">
+          <div class="funnel-step-name">${s.name}</div>
+          <div class="funnel-step-owner">${s.owner}</div>
+        </div>
+        <div class="funnel-step-right">
+          <div class="funnel-val" style="color:${s.color}">${fmt(s.d1v)}</div>
+          <div class="funnel-vs">D-2: ${fmt(s.d2v)}</div>
+          <div class="${valcls}">${vDiff>0?'↑':'↓'}${fmt(Math.abs(vDiff))}</div>
+        </div>
+      </div>
+      <div class="funnel-bars">
+        <div class="funnel-bar-row">
+          <div class="funnel-bar-label" style="color:${s.color};font-weight:700">D-1</div>
+          <div class="funnel-bar-track"><div class="funnel-bar-fill2" style="width:${w1}%;background:${s.color}"></div></div>
+          ${i>0?`<div class="${convcls}" style="font-size:9px;padding:1px 6px">${conv1.toFixed(1)}% ${convDiff>=0?'▲':'▼'}${Math.abs(convDiff).toFixed(1)}pp</div>`:''}
+        </div>
+        <div class="funnel-bar-row">
+          <div class="funnel-bar-label">D-2</div>
+          <div class="funnel-bar-track"><div class="funnel-bar-fill2" style="width:${w2}%;background:${s.color}40"></div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// §6 CHARTS
+function renderCharts(){
+  Object.values(CHARTS).forEach(c=>c&&c.destroy&&c.destroy());
+  const t=DATA.trend;
+  if(!t||!t.length) return;
+  const labels=t.map(r=>{ const d=new Date(r.Date); return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'}); });
+
+  // Muted editorial palette — matches CSS signal colors
+  const chartDefaults={
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{
+        labels:{
+          color:'#7A776C',
+          font:{size:9,family:'JetBrains Mono',weight:'500'},
+          boxWidth:8,boxHeight:8,
+          usePointStyle:true,pointStyle:'rect',
+        }
+      }
+    },
+    scales:{
+      x:{
+        ticks:{color:'#A8A49A',font:{size:8,family:'JetBrains Mono'},maxTicksLimit:10},
+        grid:{color:'#E8E4D8',drawBorder:false},
+        border:{color:'#D8D4C8'},
+      },
+      y:{
+        ticks:{color:'#A8A49A',font:{size:8,family:'JetBrains Mono'}},
+        grid:{color:'#E8E4D8',drawBorder:false},
+        border:{color:'#D8D4C8'},
+      }
+    }
+  };
+
+  CHARTS.vol=new Chart($('chart-vol'),{type:'line',data:{labels,datasets:[
+    {label:'Inspections',data:t.map(r=>r['Total Inspections']||0),
+      borderColor:'#1A4A7A',backgroundColor:'rgba(26,74,122,.06)',
+      fill:true,tension:.3,pointRadius:1.5,borderWidth:1.5},
+    {label:'PRs',data:t.map(r=>r['Total PR']||0),
+      borderColor:'#C4500A',backgroundColor:'rgba(196,80,10,.06)',
+      fill:true,tension:.3,pointRadius:1.5,borderWidth:1.5}
+  ]},options:chartDefaults});
+
+  CHARTS.pct=new Chart($('chart-pct'),{type:'line',data:{labels,datasets:[
+    {label:'Acceptance %',data:t.map(r=>r['Accept%']!=null?r['Accept%']*100:null),
+      borderColor:'#2D6A4A',backgroundColor:'rgba(45,106,74,.06)',
+      fill:true,tension:.3,pointRadius:1.5,borderWidth:1.5,spanGaps:true},
+    {label:'A2C %',data:t.map(r=>r['A2C%']!=null?r['A2C%']*100:null),
+      borderColor:'#8B5E00',backgroundColor:'rgba(139,94,0,.06)',
+      fill:true,tension:.3,pointRadius:1.5,borderWidth:1.5,spanGaps:true}
+  ]},options:{...chartDefaults,scales:{...chartDefaults.scales,y:{...chartDefaults.scales.y,ticks:{...chartDefaults.scales.y.ticks,callback:v=>v.toFixed(1)+'%'}}}}});
+}
+
+// §7 MATRIX (MTD vs LMTD)
+function renderMatrix(mtd,lmtd){
+  const lmap={}; lmtd.forEach(r=>{lmap[r.Region]=r;});
+  const sorted=[...mtd].sort((a,b)=>(b['Total PR']||0)-(a['Total PR']||0));
+
+  const paceEl=(v,l)=>{
+    if(!l||!v) return `<span class="pace-chip pace-watch">—</span>`;
+    const r=v/l;
+    const cls=r>=.95?'pace-on':r>=.8?'pace-watch':'pace-behind';
+    const lbl=r>=.95?'On Pace':r>=.8?'Watch':'Behind';
+    return `<span class="pace-chip ${cls}">${lbl} <b>${(r*100).toFixed(0)}%</b></span>`;
+  };
+  const pair=(v,l,type)=>{
+    const diff=v&&l?v-l:null;
+    const isUp=diff>0;
+    const dcls=diff===null?'arrow-flat':Math.abs(diff)<.0005?'arrow-flat':isUp?'arrow-up':'arrow-dn';
+    const darrow=diff===null?'→':diff>0?'▲':diff<0?'▼':'→';
+    const fv=type==='pct'?fmt(v,'pct'):fmt(v);
+    const fl=type==='pct'?fmt(l,'pct'):fmt(l);
+    return `<div style="display:flex;align-items:center;gap:5px">
+      <span class="mtd-val">${fv}</span>
+      <span class="${dcls}" style="font-size:10px">${darrow}</span>
+      <span class="lmtd-val">${fl}</span>
+    </div>`;
+  };
+
+  const zoneClass=z=>({North:'North',West:'West',East:'East','MH & AP':'MH',BLR:'BLR',South:'South'}[z]||z);
+
+  $('matrix-body').innerHTML=sorted.map(r=>{
+    const l=lmap[r.Region]||{};
+    const prSI=pct(r['Total SI'],r['Total PR']);
+    const lPrSI=pct(l['Total SI'],l['Total PR']);
+    return `<tr>
+      <td><b>${r.Region}</b></td>
+      <td><span class="region-tag tag-${zoneClass(r.Zone)}">${r.Zone}</span></td>
+      <td>${pair(r['Total Inspections'],l['Total Inspections'],'num')}</td>
+      <td>${pair(r['Non GS Inspections'],l['Non GS Inspections'],'num')}</td>
+      <td>${pair(r['Day Unique Raises'],l['Day Unique Raises'],'num')}</td>
+      <td>${chipEl(r['Acceptance%'],'pct',TH.accept)}</td>
+      <td>${pair(r['Acceptance (OCB+PAI)'],l['Acceptance (OCB+PAI)'],'num')}</td>
+      <td>${chipEl(r['A2C'],'pct',TH.a2c)}</td>
+      <td>${pair(r['A2C tokens'],l['A2C tokens'],'num')}</td>
+      <td>${pair(r['Total PR'],l['Total PR'],'num')}</td>
+      <td>${pair(r['Total SI'],l['Total SI'],'num')}</td>
+      <td>${chipEl(prSI,'pct',{good:.9,warn:.7})}</td>
+      <td>${paceEl(r['Total PR'],l['Total PR'])}</td>
+    </tr>`;
+  }).join('');
+}
+
+// §8 SPOTLIGHT (D-1 vs D-2)
+function renderSpotlight(d1,d2){
+  const d2map={}; d2.forEach(r=>{d2map[r.Region]=r;});
+  const sorted=[...d1].sort((a,b)=>(b['Total PR']||0)-(a['Total PR']||0));
+
+  function rcaLabel(r){
+    const a=r['Acceptance%'],b=r['A2C'],e=r['EHB/TP'];
+    const siGap=(r['Total PR']||0)-(r['Total SI']||0);
+    if(!r['Total Inspections']) return `<span class="chip chip-gray">No volume</span>`;
+    if(siGap>4&&!r['Total SI']) return `<span class="chip chip-red">🚗 Pickup stuck</span>`;
+    if(b!==null&&b<.5) return `<span class="chip chip-red">💔 Low A2C</span>`;
+    if(a!==null&&a<TH.accept.warn) return `<span class="chip chip-amber">❌ Low accept</span>`;
+    if(e!==null&&e>1.1) return `<span class="chip chip-amber">💰 Price gap</span>`;
+    if(siGap>3) return `<span class="chip chip-amber">📦 PR→SI lag</span>`;
+    if(a>=TH.accept.good&&b>=TH.a2c.good) return `<span class="chip chip-green">✓ Healthy</span>`;
+    return `<span class="chip chip-gray">Monitor</span>`;
+  }
+  function statusEl(r){
+    const a=r['Acceptance%'],b=r['A2C'];
+    const sc=(a>=TH.accept.good?1:a>=TH.accept.warn?.5:0)+(b>=TH.a2c.good?1:b>=TH.a2c.warn?.5:0);
+    const cls=sc>=1.5?'pace-on':sc>=.5?'pace-watch':'pace-behind';
+    const lbl=sc>=1.5?'✓ Healthy':sc>=.5?'⚠ Watch':'✗ At Risk';
+    return `<span class="pace-chip ${cls}">${lbl}</span>`;
+  }
+  const zoneClass=z=>({North:'North',West:'West',East:'East','MH & AP':'MH',BLR:'BLR',South:'South'}[z]||z);
+
+  $('spotlight-body').innerHTML=sorted.map((r,i)=>{
+    const p=d2map[r.Region]||{};
+    const prDelta=(r['Total PR']||0)-(p['Total PR']||0);
+    const dcls=prDelta>0?'arrow-up':prDelta<0?'arrow-dn':'arrow-flat';
+    return `<tr>
+      <td class="text-ink3">${i+1}</td>
+      <td><b>${r.Region}</b></td>
+      <td><span class="region-tag tag-${zoneClass(r.Zone||'')}">${r.Zone||'—'}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span class="mtd-val">${fmt(r['Total Inspections'])}</span>
+          <span class="${(r['Total Inspections']||0)>(p['Total Inspections']||0)?'arrow-up':'arrow-dn'}" style="font-size:10px">${(r['Total Inspections']||0)>(p['Total Inspections']||0)?'▲':'▼'}</span>
+          <span class="lmtd-val">${fmt(p['Total Inspections'])}</span>
+        </div>
+      </td>
+      <td>${chipEl(r['Acceptance%'],'pct',TH.accept)}</td>
+      <td><span class="mtd-val">${fmt(r['Acceptance (OCB+PAI)'])}</span></td>
+      <td>${chipEl(r['A2C'],'pct',TH.a2c)}</td>
+      <td><span class="mtd-val">${fmt(r['A2C tokens'])}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span class="mtd-val text-orange">${fmt(r['Total PR'])}</span>
+          <span class="${dcls}" style="font-size:10px">${prDelta>0?'▲':'▼'}</span>
+          <span class="lmtd-val">${fmt(p['Total PR'])}</span>
+        </div>
+      </td>
+      <td><span class="mtd-val">${fmt(r['Total SI'])}</span> <span class="lmtd-val">/ ${fmt(p['Total SI'])}</span></td>
+      <td>${r['EHB/TP']?chipEl(r['EHB/TP'],'x',null):'<span class="chip chip-gray">—</span>'}</td>
+      <td>${statusEl(r)}</td>
+      <td>${rcaLabel(r)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// view toggle
+function setView(v,btn){
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(v==='focus'){
+    document.querySelectorAll('.section').forEach((s,i)=>{
+      s.style.display=i<=2?'block':'none';
+    });
+  } else {
+    document.querySelectorAll('.section').forEach(s=>s.style.display='block');
+  }
+}
+
+// ── CSV UPLOAD SYSTEM ────────────────────────────────
+const EMBEDDED_DATA = JSON.parse(JSON.stringify(DATA)); // deep clone original
+
+function toggleUpload(e){
+  e.stopPropagation();
+  const dd=$('upload-dropdown');
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e=>{
+  if(!$('upload-wrap').contains(e.target)) $('upload-dropdown').classList.remove('open');
+});
+
+function handleDragOver(e){ e.preventDefault(); $('upload-drop-zone').classList.add('drag-over'); }
+function handleDragLeave(){ $('upload-drop-zone').classList.remove('drag-over'); }
+function handleDrop(e){
+  e.preventDefault();
+  $('upload-drop-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file) processFile(file);
+}
+function handleFileSelect(e){ processFile(e.target.files[0]); }
+
+function setStatus(type, msg){
+  const el=$('upload-status');
+  el.className='upload-status '+type;
+  el.innerHTML=`<span>${type==='loading'?'⏳':type==='success'?'✅':'❌'}</span><span>${msg}</span>`;
+}
+
+function processFile(file){
+  if(!file || !file.name.endsWith('.csv')){
+    setStatus('error','Please upload a .csv file'); return;
+  }
+  setStatus('loading', `Reading ${file.name}…`);
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = parseCSV(e.target.result);
+      const newData = buildDataFromRows(parsed);
+      // Replace global DATA
+      Object.assign(DATA, newData);
+      setStatus('success', `Loaded ${file.name} — ${parsed.length} rows · D-1: ${fmtDate(DATA.d1_date,true)}`);
+      $('upload-btn').classList.add('has-data');
+      $('upload-btn-label').textContent = fmtDate(DATA.d1_date,true);
+      $('upload-clear-btn').style.display='block';
+      // Re-render after short delay
+      setTimeout(()=>{ activeZone='all'; boot(); $('upload-dropdown').classList.remove('open'); }, 400);
+    } catch(err){
+      setStatus('error', err.message || 'Failed to parse CSV');
+      console.error(err);
+    }
+  };
+  reader.onerror = ()=> setStatus('error','Could not read file');
+  reader.readAsText(file);
+}
+
+function clearUpload(){
+  Object.assign(DATA, JSON.parse(JSON.stringify(EMBEDDED_DATA)));
+  $('upload-btn').classList.remove('has-data');
+  $('upload-btn-label').textContent='Update Data';
+  $('upload-clear-btn').style.display='none';
+  $('upload-status').className='upload-status';
+  $('csv-file-input').value='';
+  activeZone='all';
+  boot();
+  $('upload-dropdown').classList.remove('open');
+}
+
+// ── CSV PARSER ───────────────────────────────────────
+function parseCSV(text){
+  const lines = text.trim().split('\n').filter(l=>l.trim());
+  if(lines.length < 2) throw new Error('CSV appears empty');
+
+  // Parse header — handle BOM, trim whitespace/quotes
+  const header = lines[0].split(',').map(h=>h.trim().replace(/^\uFEFF/,'').replace(/^"|"$/g,''));
+
+  // Validate required columns
+  const required = ['Date','Region','Total Inspections','Day Unique Raises',
+    'Acceptance (OCB+PAI)','A2C tokens','Total PR','Total SI'];
+  const missing = required.filter(r=>!header.includes(r));
+  if(missing.length) throw new Error(`Missing columns: ${missing.join(', ')}`);
+
+  const rows = [];
+  for(let i=1;i<lines.length;i++){
+    const vals = splitCSVLine(lines[i]);
+    if(vals.length < 3) continue;
+    const row = {};
+    header.forEach((h,j)=>{ row[h] = vals[j] !== undefined ? vals[j].trim().replace(/^"|"$/g,'') : ''; });
+    rows.push(row);
+  }
+  if(!rows.length) throw new Error('No data rows found in CSV');
+  return rows;
+}
+
+function splitCSVLine(line){
+  // Handle quoted fields with commas inside
+  const result=[]; let cur='', inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){ inQ=!inQ; }
+    else if(c===','&&!inQ){ result.push(cur); cur=''; }
+    else { cur+=c; }
+  }
+  result.push(cur);
+  return result;
+}
+
+function parseNum(v){ return v===''||v===null||v===undefined ? null : parseFloat(v); }
+function parsePct(v){
+  if(v===''||v===null||v===undefined) return null;
+  const s=String(v).replace('%','').trim();
+  return s===''?null:parseFloat(s)/100;
+}
+function parseDate(v){
+  if(!v) return null;
+  v=v.trim();
+  // Try DD/MM/YYYY first
+  let m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  // Try YYYY-MM-DD
+  m=v.match(/^\d{4}-\d{2}-\d{2}/);
+  if(m) return m[0];
+  // Try MM/DD/YYYY
+  m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m){ const d=new Date(v); return isNaN(d)?null:d.toISOString().slice(0,10); }
+  const d=new Date(v); return isNaN(d)?null:d.toISOString().slice(0,10);
+}
+
+// ── DATA BUILDER FROM PARSED ROWS ────────────────────
+function buildDataFromRows(rows){
+  // Attach Zone
+  const zm = EMBEDDED_DATA.zone_map;
+  rows.forEach(r=>{
+    r._date = parseDate(r['Date']);
+    r._zone = zm[r['Region']] || 'Unknown';
+  });
+
+  // Filter out rows with no date or unknown region
+  const valid = rows.filter(r=>r._date && r._zone!=='Unknown');
+  if(!valid.length) throw new Error('No rows matched known regions. Check Region codes (e.g. NDL, BLR).');
+
+  // Find meaningful dates (total inspections > 0)
+  const byDate={};
+  valid.forEach(r=>{
+    if(!byDate[r._date]) byDate[r._date]=0;
+    byDate[r._date]+=(parseNum(r['Total Inspections'])||0);
+  });
+  const meaningfulDates=Object.keys(byDate).filter(d=>byDate[d]>0).sort();
+  if(!meaningfulDates.length) throw new Error('All rows have zero inspections — check your data.');
+
+  const d1_date=meaningfulDates[meaningfulDates.length-1];
+  const d2_date=meaningfulDates.length>1?meaningfulDates[meaningfulDates.length-2]:d1_date;
+
+  // MTD / LMTD
+  const d1dt=new Date(d1_date);
+  const mtdStart=new Date(d1dt.getFullYear(),d1dt.getMonth(),1).toISOString().slice(0,10);
+  const lmStart=new Date(d1dt.getFullYear(),d1dt.getMonth()-1,1).toISOString().slice(0,10);
+  const lmEnd=new Date(d1dt.getFullYear(),d1dt.getMonth()-1,d1dt.getDate()).toISOString().slice(0,10);
+
+  // Build clean record
+  function buildRecord(r){
+    return {
+      Date: r._date,
+      Region: r['Region'],
+      Zone: r._zone,
+      'Total Inspections': parseNum(r['Total Inspections'])||0,
+      'Non GS Inspections': parseNum(r['Non GS Inspections'])||0,
+      'Day Unique Raises': parseNum(r['Day Unique Raises'])||0,
+      'EHB/TP': parsePct(r['EHB/TP']),
+      'Acceptance (OCB+PAI)': parseNum(r['Acceptance (OCB+PAI)'])||0,
+      'Acceptance%': parsePct(r['Acceptance%']),
+      'A2C tokens': parseNum(r['A2C tokens'])||0,
+      'A2C': parsePct(r['A2C']),
+      'Nego Received 10%': parseNum(r['Nego Received 10%'])||0,
+      'Nego token Done': parseNum(r['Nego token Done'])||0,
+      'Nego Conversion': parsePct(r['Nego Conversion']),
+      'Total PR': parseNum(r['Total PR'])||0,
+      'Total SI': parseNum(r['Total SI'])||0,
+      'Date_str': r._date
+    };
+  }
+
+  const d1 = valid.filter(r=>r._date===d1_date).map(buildRecord);
+  const d2 = valid.filter(r=>r._date===d2_date).map(buildRecord);
+
+  // MTD aggregation
+  function aggRegion(recs){
+    const m={};
+    recs.forEach(r=>{
+      const k=r['Region'];
+      if(!m[k]) m[k]={Region:k,Zone:r['Zone']||zm[k]||'Unknown',
+        'Total Inspections':0,'Non GS Inspections':0,'Day Unique Raises':0,
+        'Acceptance (OCB+PAI)':0,'A2C tokens':0,'Nego Received 10%':0,
+        'Nego token Done':0,'Total PR':0,'Total SI':0,_ehbArr:[],_days:new Set()};
+      const o=m[k];
+      o['Total Inspections']+=(r['Total Inspections']||0);
+      o['Non GS Inspections']+=(r['Non GS Inspections']||0);
+      o['Day Unique Raises']+=(r['Day Unique Raises']||0);
+      o['Acceptance (OCB+PAI)']+=(r['Acceptance (OCB+PAI)']||0);
+      o['A2C tokens']+=(r['A2C tokens']||0);
+      o['Nego Received 10%']+=(r['Nego Received 10%']||0);
+      o['Nego token Done']+=(r['Nego token Done']||0);
+      o['Total PR']+=(r['Total PR']||0);
+      o['Total SI']+=(r['Total SI']||0);
+      if(r['EHB/TP']!=null) o._ehbArr.push(r['EHB/TP']);
+      o._days.add(r['Date']);
+    });
+    return Object.values(m).map(o=>({
+      ...o,
+      'Acceptance%': o['Day Unique Raises']>0 ? o['Acceptance (OCB+PAI)']/o['Day Unique Raises'] : null,
+      'A2C': o['Acceptance (OCB+PAI)']>0 ? o['A2C tokens']/o['Acceptance (OCB+PAI)'] : null,
+      'EHB/TP': o._ehbArr.length ? o._ehbArr.reduce((a,b)=>a+b,0)/o._ehbArr.length : null,
+      days: o._days.size
+    }));
+  }
+
+  function aggZone(recs){
+    const m={};
+    recs.forEach(r=>{
+      const z=r['Zone']||zm[r['Region']]||'Unknown';
+      if(!m[z]) m[z]={Zone:z,'Total Inspections':0,'Non GS Inspections':0,'Day Unique Raises':0,
+        'Acceptance (OCB+PAI)':0,'A2C tokens':0,'Total PR':0,'Total SI':0};
+      const o=m[z];
+      o['Total Inspections']+=(r['Total Inspections']||0);
+      o['Non GS Inspections']+=(r['Non GS Inspections']||0);
+      o['Day Unique Raises']+=(r['Day Unique Raises']||0);
+      o['Acceptance (OCB+PAI)']+=(r['Acceptance (OCB+PAI)']||0);
+      o['A2C tokens']+=(r['A2C tokens']||0);
+      o['Total PR']+=(r['Total PR']||0);
+      o['Total SI']+=(r['Total SI']||0);
+    });
+    return Object.values(m).map(o=>({
+      ...o,
+      'Acceptance%': o['Day Unique Raises']>0 ? o['Acceptance (OCB+PAI)']/o['Day Unique Raises'] : null,
+      'A2C%': o['Acceptance (OCB+PAI)']>0 ? o['A2C tokens']/o['Acceptance (OCB+PAI)'] : null,
+      'PR_SI_rate': o['Total PR']>0 ? o['Total SI']/o['Total PR'] : null
+    }));
+  }
+
+  const mtdRecs = valid.filter(r=>r._date>=mtdStart && r._date<=d1_date).map(buildRecord);
+  const lmtdRecs = valid.filter(r=>r._date>=lmStart && r._date<=lmEnd).map(buildRecord);
+
+  // Trend — last 30 meaningful dates
+  const trendDates = meaningfulDates.slice(-30);
+  const trendByDate={};
+  valid.filter(r=>trendDates.includes(r._date)).forEach(r=>{
+    const d=r._date;
+    if(!trendByDate[d]) trendByDate[d]={'Date':d,'Total Inspections':0,'Day Unique Raises':0,
+      'Acceptance (OCB+PAI)':0,'A2C tokens':0,'Total PR':0,'Total SI':0};
+    const o=trendByDate[d];
+    o['Total Inspections']+=(parseNum(r['Total Inspections'])||0);
+    o['Day Unique Raises']+=(parseNum(r['Day Unique Raises'])||0);
+    o['Acceptance (OCB+PAI)']+=(parseNum(r['Acceptance (OCB+PAI)'])||0);
+    o['A2C tokens']+=(parseNum(r['A2C tokens'])||0);
+    o['Total PR']+=(parseNum(r['Total PR'])||0);
+    o['Total SI']+=(parseNum(r['Total SI'])||0);
+  });
+  const trend = Object.values(trendByDate).sort((a,b)=>a.Date.localeCompare(b.Date)).map(o=>({
+    ...o,
+    'Accept%': o['Day Unique Raises']>0 ? o['Acceptance (OCB+PAI)']/o['Day Unique Raises'] : null,
+    'A2C%': o['Acceptance (OCB+PAI)']>0 ? o['A2C tokens']/o['Acceptance (OCB+PAI)'] : null,
+    'Date_str': o.Date
+  }));
+
+  const mtdAgg=aggRegion(mtdRecs);
+  const lmtdAgg=aggRegion(lmtdRecs);
+  const mtdDays=new Set(mtdRecs.map(r=>r['Date'])).size;
+  const lmtdDays=new Set(lmtdRecs.map(r=>r['Date'])).size;
+
+  return {
+    d1_date, d2_date,
+    mtd_start: mtdStart, lmtd_start: lmStart, lmtd_end: lmEnd,
+    mtd_days: mtdDays, lmtd_days: lmtdDays,
+    d1, d2,
+    mtd: mtdAgg, lmtd: lmtdAgg,
+    mtd_zone: aggZone(mtdRecs), lmtd_zone: aggZone(lmtdRecs),
+    trend,
+    zone_map: EMBEDDED_DATA.zone_map,
+    zone_leader: EMBEDDED_DATA.zone_leader
+  };
+}
+
+// BOOT
+setTimeout(()=>{
+  $('splash').style.display='none';
+  $('app').style.display='block';
+  boot();
+},1400);
+</script>
+</body>
+</html>
